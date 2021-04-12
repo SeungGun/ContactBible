@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF ">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_gravity="top"
+            android:layout_weight="3"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Contact Bible"
+                    android:elevation="22pt"
+                    android:textSize="23pt"
+                    android:textStyle="bold"
+                    android:textColor="#384B60"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/read_continuous"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#BEDAFA"
+                    android:onClick="goRead"
+                    android:text="이어서 읽기"
+                    android:textSize="13pt"
+                    android:textColor="#384B60"/>
+                <Button
+                    android:id="@+id/progress_check"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#BEDAFA "
+                    android:onClick="goProgress"
+                    android:text="진도율 확인"
+                    android:textSize="13pt"
+                    android:textColor="#384B60"
+                    />
+                <Button
+                    android:id="@+id/bookmark_check"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#BEDAFA "
+                    android:onClick="goBookmark"
+                    android:text="즐겨찾기"
+                    android:textSize="13pt"
+                    android:textColor="#384B60"
+                    />
+                <Button
+                    android:id="@+id/app_helper"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#BEDAFA "
+                    android:onClick="goHelper"
+                    android:text="도움말"
+                    android:textSize="13pt"
+                    android:textStyle="bold"
+                    android:textColor="#384B60"
+                    />
+                <Button
+                    android:id="@+id/setting"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#BEDAFA"
+                    android:onClick="goSetting"
+                    android:text="환경설정"
+                    android:textSize="13pt"
+                    android:textColor="#384B60"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="8.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="#555555"
+                    android:paddingLeft="40dp"/>
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                        android:text="v 1.1.2"
+                    android:textColor="#BBBBBB"/>
+        </LinearLayout>
+
+</LinearLayout>

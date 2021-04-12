@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+  >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="0.7"
+        android:background="@drawable/bottom_btn_design">
+        <ImageButton
+            android:id="@+id/back_menu_setting"
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:background="@drawable/left_arrow"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"/>
+        <TextView
+            android:layout_width="0px"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
+            android:text="환경설정"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="13pt"
+            android:paddingRight="30dp"/>
+    </LinearLayout>
+    <fragment
+        android:id="@+id/setting_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="9.3"
+        android:name="com.windry.contactbible.SettingFragment"/>
+</LinearLayout>

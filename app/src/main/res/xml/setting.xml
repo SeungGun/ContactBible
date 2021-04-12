@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <PreferenceCategory
+        android:title="간격 설정"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true"
+        >
+    <SeekBarPreference
+        android:key="letterSpace"
+        android:title="글자 사이 간격 설정 (자간)"
+        android:summary="구절의 각 글자 간격 크기 설정(기본값 : 0)"
+        android:max="15"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/letterspace_image"
+        />
+    <SeekBarPreference
+        android:key="lineSpace"
+        android:title="줄 사이 간격 설정 (행간)"
+        android:summary="구절의 각 줄 사이의 간격 설정(기본값 : 0)"
+        android:max="15"
+        app:allowDividerAbove="true"
+        android:icon="@drawable/linespace_image"
+        />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="색상 설정"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        >
+    <ListPreference
+        android:key="ThemeColor"
+        android:entries="@array/ThemeColor"
+        android:entryValues="@array/ThemeColor_value"
+        android:title="테마 색 설정"
+        android:summary="상단, 하단 메뉴등 색상 설정"
+        android:icon="@drawable/setting_theme"
+        app:allowDividerAbove="true"
+        />
+    <ListPreference
+        android:key="BackgroundColor"
+        android:entries="@array/BackgroundColor"
+        android:entryValues="@array/Background_value"
+        android:title="배경 색 설정"
+        android:summary="구절 표시 화면의 배경색 설정"
+        android:icon="@drawable/setting_background"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        />
+    <ListPreference
+        android:key="TextColor"
+        android:entries="@array/TextColor"
+        android:entryValues="@array/TextColor_value"
+        android:title="글씨 색 설정"
+        android:icon="@drawable/setting_text"
+        android:summary="구절 글씨 색상 설정"
+        app:allowDividerAbove="true"
+        />
+    </PreferenceCategory>
+</PreferenceScreen>

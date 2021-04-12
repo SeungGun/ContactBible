@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical|center_horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bottom_btn_design">
+        <Button
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/left_arrow"
+            android:id="@+id/progress_back"/>
+        <TextView
+            android:layout_width="0px"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
+            android:text="진도율"
+            android:textColor="#000000"
+            android:textSize="15pt"
+            android:gravity="center"
+            android:layout_marginRight="25dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical|center_horizontal">
+        <ProgressBar
+            android:layout_marginTop="10dp"
+            android:id="@+id/progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/progressbar_design"
+            android:max="100" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="5"
+            android:id="@+id/percentage"
+            android:textSize="11pt"
+            android:textColor="#000000"
+            />
+        <ProgressBar
+            android:id="@+id/progressbar_old"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/progressbar_design"
+
+            android:max="100" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="5"
+            android:id="@+id/percentage_old"
+            android:textSize="11pt"
+            android:textColor="#000000"/>
+        <ProgressBar
+            android:id="@+id/progressbar_new"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/progressbar_design"
+
+            android:max="100" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="5"
+            android:id="@+id/percentage_new"
+            android:textSize="11pt"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+</LinearLayout>
