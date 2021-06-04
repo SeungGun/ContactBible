@@ -5690,7 +5690,7 @@ public class SheetNumList {
         switch (sheetTitle){
             case "Ephesians 1":
             case "에베소서 1":
-                beginIdx = 29191;
+                beginIdx = 29208;
                 endIdx = 29230;
                 break;
             case "Ephesians 2":
