@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.database;
 
 import android.content.Context;
 import android.database.Cursor;

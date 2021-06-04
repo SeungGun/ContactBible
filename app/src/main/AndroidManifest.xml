@@ -11,18 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_contact_hand_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".SettingActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.SettingActivity"></activity>
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity" />
-        <activity android:name=".ProgressBarActivity" />
-        <activity android:name=".BookMarkActivity" />
-        <activity android:name=".AppHelperActivity" />
+        <activity android:name=".activities.MainMenuActivity" />
+        <activity android:name=".activities.ProgressBarActivity" />
+        <activity android:name=".activities.BookMarkActivity" />
+        <activity android:name=".activities.AppHelperActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.data;
 
 import android.graphics.drawable.Drawable;
 

@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.windry.contactbible.R;
+import com.windry.contactbible.data.SideMidMenuItem;
 
 import java.util.ArrayList;
 

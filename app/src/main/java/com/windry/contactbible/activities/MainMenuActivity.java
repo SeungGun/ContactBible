@@ -1,10 +1,12 @@
-package com.windry.contactbible;
+package com.windry.contactbible.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+
+import com.windry.contactbible.R;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -32,7 +34,7 @@ public class MainMenuActivity extends AppCompatActivity {
             go_bookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(view.getContext(),BookMarkActivity.class);
+                    intent = new Intent(view.getContext(), BookMarkActivity.class);
                     startActivity(intent);
                 }
             });
@@ -45,21 +47,21 @@ public class MainMenuActivity extends AppCompatActivity {
             go_progress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(view.getContext(),ProgressBarActivity.class);
+                    intent = new Intent(view.getContext(), ProgressBarActivity.class);
                     startActivity(intent);
                 }
             });
             go_setting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(view.getContext(),SettingActivity.class);
+                    intent = new Intent(view.getContext(), SettingActivity.class);
                     startActivity(intent);
                 }
             });
             go_helper.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(view.getContext(),AppHelperActivity.class);
+                    intent = new Intent(view.getContext(), AppHelperActivity.class);
                     startActivity(intent);
                 }
             });

@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.activities;
 
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -9,6 +9,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.windry.contactbible.adapter.BookMarkAdapter;
+import com.windry.contactbible.database.DateDBHelper;
+import com.windry.contactbible.R;
+import com.windry.contactbible.database.RealBMDBHelper;
+
 import java.util.Arrays;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

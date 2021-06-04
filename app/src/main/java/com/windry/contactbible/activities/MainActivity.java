@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.activities;
 //Copyright by Seunggun sin
 
 import androidx.annotation.NonNull;
@@ -42,6 +42,17 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.windry.contactbible.database.BookMarkDBHelper;
+import com.windry.contactbible.database.DateDBHelper;
+import com.windry.contactbible.database.IndexDBHelper;
+import com.windry.contactbible.database.MemoDBHelper;
+import com.windry.contactbible.R;
+import com.windry.contactbible.database.RealBMDBHelper;
+import com.windry.contactbible.data.SheetNumList;
+import com.windry.contactbible.adapter.SideMenuAdapter;
+import com.windry.contactbible.adapter.SideMidMenuAdapter;
+import com.windry.contactbible.adapter.SideOuterMenuAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;

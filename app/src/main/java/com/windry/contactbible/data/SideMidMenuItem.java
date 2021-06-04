@@ -1,8 +1,8 @@
-package com.windry.contactbible;
+package com.windry.contactbible.data;
 
 import android.graphics.drawable.Drawable;
 
-public class SideOuterMenuItem {
+public class SideMidMenuItem {
     String title;
     Drawable backColor;
     public String getTitle(){

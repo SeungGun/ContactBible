@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.database;
 
 import android.content.ContentValues;
 import android.content.Context;

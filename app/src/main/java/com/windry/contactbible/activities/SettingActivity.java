@@ -1,10 +1,12 @@
-package com.windry.contactbible;
+package com.windry.contactbible.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+
+import com.windry.contactbible.R;
 
 public class SettingActivity extends AppCompatActivity {
 
