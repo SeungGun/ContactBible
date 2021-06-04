@@ -23,6 +23,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -54,8 +55,19 @@ import com.windry.contactbible.adapter.SideMenuAdapter;
 import com.windry.contactbible.adapter.SideMidMenuAdapter;
 import com.windry.contactbible.adapter.SideOuterMenuAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ListClickThread list_thread; // 사이드바 in/out 쓰레드
     private ReadExcelThread excel_thread; // 엑셀 읽기 쓰레드
     private ReadKoreanExcelThread koreanExcelThread;
+    private Thread parsingThread;
 
     private DrawerLayout drawerLayout; // 사이드바 움직임 화면 layout
     private View drawerView;
@@ -139,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public boolean isKorean = true;
     private boolean isPlayed = false;
 
+    private Handler handler;
+    private URL url;
     private ArrayList<Boolean> isAll = new ArrayList<>();
     private SideMenuAdapter sideMenuAdapter;
     private SideMidMenuAdapter sideMidMenuAdapter;
@@ -150,6 +165,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private String outer_str; // 성경배열을 받는 임시 변수
     private String mid_str;
     private String mid_reverse_str;
+    private String tempString;
+    private String receiveMsgFromJson;
+    private String bookName; // json 책
+    private String chapter; // json 장
+    private String verse; // json 절
+    private String text; // json "책 장:절"에 대한 내용
     public String defaultThemeColor = "#BEDAFA";
     private final String[] bible_titleList = {"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
             "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles",
@@ -173,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context_main = this;
+        handler = new Handler(Looper.myLooper());
+
         dbHelper = new IndexDBHelper(this); // 현재 성경위치 대한 인덱스 데이터베이스
         memoDBHelper = new MemoDBHelper(this); // 각 절마다의 적은 메모 데이터베이스
         bmDBHelper = new BookMarkDBHelper(this); // 읽었는지 확인하는 데이터베이스
@@ -4056,6 +4079,63 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 isAll.add(false);
             }
         }
+    }
+    public void connectHttpAndGetJson(String recv){
+        if(recv.contains(" ")){
+            recv = recv.replace(' ','+');
+        }
+        final String finalReceive = recv;
+        parsingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    url = new URL("https://labs.bible.org/api/?passage=" + finalReceive + "&type=json");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+                    if (connection.getResponseCode() == connection.HTTP_OK) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                        BufferedReader reader = new BufferedReader(inputStreamReader);
+                        StringBuffer buffer = new StringBuffer();
+
+                        while ((tempString = reader.readLine()) != null) {
+                            buffer.append(tempString);
+                        }
+                        receiveMsgFromJson = buffer.toString();
+                        parseJson(receiveMsgFromJson);
+
+                        reader.close();
+
+                    } else {
+                        Log.e("통신 실패", connection.getResponseCode() + " 에러");
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        parsingThread.start();
+    }
+
+    public void parseJson(String jsonString){
+        try{
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for(int i=0; i<jsonArray.length(); ++i){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                bookName = jsonObject.optString("bookname"); //ex : John
+                chapter = jsonObject.optString("chapter"); //ex : 3
+                verse = jsonObject.optString("verse"); // ex : 16
+                text = jsonObject.optString("text"); // ex : For .....~
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        thread.interrupt();
     }
 }
 
