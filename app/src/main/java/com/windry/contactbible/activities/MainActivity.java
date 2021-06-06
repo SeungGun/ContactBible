@@ -229,102 +229,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         /*-----------------------------------------*/
         sheetNumList = new SheetNumList();
-        language_switch = findViewById(R.id.language_switch);
-        language_switch.setChecked(true); //chk
-        language_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    isKorean = true;
-                    showToast("한글 모드");
-                    ChangeLanguage(isKorean);
-                    if(current_side_num == 1){
-                        content.setText(korean_sheet.getCell(1, index).getContents());
-                        title.setText(korean_sheet.getCell(0,index).getContents());
-                    }
-                    else if(current_side_num == 2){
-                        side2_left_content.setText(korean_sheet.getCell(1,index).getContents());
-                        side2_right_content.setText(korean_sheet.getCell(1,index+1).getContents());
-                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                    }
-                    else if(current_side_num == 3){
-                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + ", " +
-                                korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                        side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                        side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                        side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
-                    }
-                } else {
-                    isKorean = false;
-                    showToast("영어 모드");
-                    ChangeLanguage(isKorean);
-                    if(current_side_num == 1){
-                        content.setText(sheet.getCell(1, index).getContents());
-                        title.setText(sheet.getCell(0, index).getContents());
-                    }
-                    else if(current_side_num == 2){
-                        String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                .getContents());
-                        title.setText(splitStr2);
-                        side2_left_content.setText(sheet.getCell(1, index).getContents());
-                        side2_right_content.setText(sheet.getCell(1, index + 1).getContents());
-                    }
-                    else if(current_side_num == 3){
-                        String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
-                        title.setText(splitStr);
-                        side3_left_content.setText(sheet.getCell(1, index).getContents());
-                        side3_center_content.setText(sheet.getCell(1, index + 1).getContents());
-                        side3_right_content.setText(sheet.getCell(1, index + 2).getContents());
-                    }
-                }
-            }
-        });
+        switchLanguage(); // 언어 변경 스위치
         sideMenuAdapter = new SideMenuAdapter();
         sideMidMenuAdapter = new SideMidMenuAdapter();
         sideOuterMenuAdapter = new SideOuterMenuAdapter();
 
-        goto_main = findViewById(R.id.go_mainmenu);
-        memo_store = findViewById(R.id.memo_store);
-        memo_content = findViewById(R.id.memo_space);//Edit Text
+        /* 인스턴스 멤버 변수 초기화 findViewById() */
+        initializeMemberVar();
 
-        bookmarking = findViewById(R.id.bookmark);
-        content = findViewById(R.id.text1);
-        title = findViewById(R.id.title_content);
-        bottom_menu = findViewById(R.id.bottom_menu);
-        top_menu = findViewById(R.id.top_menu_layout);
-        bottom_center_menu = findViewById(R.id.bottom_center_menu);
-        bottom_right_menu = findViewById(R.id.bottom_right_menu);
-        memo_OnOff = findViewById(R.id.btn1); // turn on/off the "MEMO space" through button
-        quit_memo_btn = findViewById(R.id.quit_memo);
-
-        listView = findViewById(R.id.list_excel);
-
-        outer_btn = findViewById(R.id.outer_btn);
-        scr = findViewById(R.id.screen_layout);
-        side1_layout = findViewById(R.id.side1_layout);
-
-        innerContent = findViewById(R.id.inner_excel);
-        mid_Content = findViewById(R.id.mid_excel);
-
-        side2_layout = findViewById(R.id.side2_layout);
-        side2_left_content = findViewById(R.id.side2_left_text);
-        side2_right_content = findViewById(R.id.side2_right_text);
-        side2_left_layout = findViewById(R.id.side2_left_layout);
-        side2_right_layout = findViewById(R.id.side2_right_layout);
-
-        side3_layout = findViewById(R.id.side3_layout);
-        side3_left_layout = findViewById(R.id.side3_left_layout);
-        side3_center_layout = findViewById(R.id.side3_center_layout);
-        side3_right_layout = findViewById(R.id.side3_right_layout);
-        side3_left_content = findViewById(R.id.side3_left_text);
-        side3_center_content = findViewById(R.id.side3_center_text);
-        side3_right_content = findViewById(R.id.side3_right_text);
-        above_content_layout = findViewById(R.id.above_content_layout);
-
-        side_mode = findViewById(R.id.side_mode);
-
-        textSize_control = findViewById(R.id.seekbar_textsize);
 
         selectMEMODB(); // Set the initial screen's memo
 
@@ -341,8 +253,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         gestureDetector = new GestureDetector(this);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.calm_bgm);
-        play_music = findViewById(R.id.play_music);
-        control_volume = findViewById(R.id.control_volume);
+
         /*---------------------------------------------------------------------------------------------- Initializes attributes and sets basic view */
 
         side_pref = getSharedPreferences("side", MODE_PRIVATE);
@@ -355,43 +266,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         pref.registerOnSharedPreferenceChangeListener(listener);
 
         /* 북마크 버튼 눌렀을 때 이벤트 part */
-        bookmarking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Cursor curr = realBMDBHelper.readIDRecord(index);
-                if (curr.getCount() > 0) {//북마크 존재 o
-                    showToast("즐겨찾기가 해제되었습니다.");
-                    bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                    realBMDBHelper.deleteRecord(index);
-                    dateDBHelper.deleteRecord(index);
-                } else {//북마크 존재 x
-                    bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                    realBMDBHelper.updateRecord(index);
-                    showToast("즐겨찾기가 설정되었습니다.");
-                    long now = System.currentTimeMillis();
-                    Date mDate = new Date(now);
-                    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                    String getTime = simpleDate.format(mDate);
-                    dateDBHelper.insertRecord(index, getTime);
-                }
-            }
-        });
+        bookmarkingInDB();
         /*----------------------------------------*/
+        storeMemoInDB(); // 메모 내용 저장 이벤트
 
-        /* 메모 저장 버튼 이벤트 part */
-        memo_store.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    memoDBHelper.updateRecord(index, memo_content.getText().toString());
-                    showToast("메모 저장성공");
-                } catch (Exception e) {
-                    memoDBHelper.insertRecord(index, memo_content.getText().toString());
-                    showToast("메모 저장성공");
-                }
-            }
-        });
-        /*-------------------------------------------------------------------------------*/
 
         /*--------------------------------------------------- List View & NaviBar 설정                                       */
         for (String each : korean_bible_titleList) {
@@ -875,6 +753,147 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Log.e("Error", e.getMessage());
         }
 
+    }
+
+    public void initializeMemberVar() {
+        goto_main = findViewById(R.id.go_mainmenu);
+        memo_store = findViewById(R.id.memo_store);
+        memo_content = findViewById(R.id.memo_space);//Edit Text
+
+        language_switch = findViewById(R.id.language_switch);
+
+        bookmarking = findViewById(R.id.bookmark);
+        content = findViewById(R.id.text1);
+        title = findViewById(R.id.title_content);
+        bottom_menu = findViewById(R.id.bottom_menu);
+        top_menu = findViewById(R.id.top_menu_layout);
+        bottom_center_menu = findViewById(R.id.bottom_center_menu);
+        bottom_right_menu = findViewById(R.id.bottom_right_menu);
+        memo_OnOff = findViewById(R.id.btn1); // turn on/off the "MEMO space" through button
+        quit_memo_btn = findViewById(R.id.quit_memo);
+
+        listView = findViewById(R.id.list_excel);
+
+        outer_btn = findViewById(R.id.outer_btn);
+        scr = findViewById(R.id.screen_layout);
+        side1_layout = findViewById(R.id.side1_layout);
+
+        innerContent = findViewById(R.id.inner_excel);
+        mid_Content = findViewById(R.id.mid_excel);
+
+        side2_layout = findViewById(R.id.side2_layout);
+        side2_left_content = findViewById(R.id.side2_left_text);
+        side2_right_content = findViewById(R.id.side2_right_text);
+        side2_left_layout = findViewById(R.id.side2_left_layout);
+        side2_right_layout = findViewById(R.id.side2_right_layout);
+
+        side3_layout = findViewById(R.id.side3_layout);
+        side3_left_layout = findViewById(R.id.side3_left_layout);
+        side3_center_layout = findViewById(R.id.side3_center_layout);
+        side3_right_layout = findViewById(R.id.side3_right_layout);
+        side3_left_content = findViewById(R.id.side3_left_text);
+        side3_center_content = findViewById(R.id.side3_center_text);
+        side3_right_content = findViewById(R.id.side3_right_text);
+        above_content_layout = findViewById(R.id.above_content_layout);
+
+        side_mode = findViewById(R.id.side_mode);
+        textSize_control = findViewById(R.id.seekbar_textsize);
+
+        play_music = findViewById(R.id.play_music);
+        control_volume = findViewById(R.id.control_volume);
+    }
+
+    public void switchLanguage() {
+        language_switch.setChecked(true); //chk
+        language_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    isKorean = true;
+                    showToast("한글 모드");
+                    ChangeLanguage(isKorean);
+                    if(current_side_num == 1){
+                        content.setText(korean_sheet.getCell(1, index).getContents());
+                        title.setText(korean_sheet.getCell(0,index).getContents());
+                    }
+                    else if(current_side_num == 2){
+                        side2_left_content.setText(korean_sheet.getCell(1,index).getContents());
+                        side2_right_content.setText(korean_sheet.getCell(1,index+1).getContents());
+                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
+                    }
+                    else if(current_side_num == 3){
+                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + ", " +
+                                korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
+                        side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
+                        side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                        side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                    }
+                } else {
+                    isKorean = false;
+                    showToast("영어 모드");
+                    ChangeLanguage(isKorean);
+                    if(current_side_num == 1){
+                        content.setText(sheet.getCell(1, index).getContents());
+                        title.setText(sheet.getCell(0, index).getContents());
+                    }
+                    else if(current_side_num == 2){
+                        String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                                .getContents());
+                        title.setText(splitStr2);
+                        side2_left_content.setText(sheet.getCell(1, index).getContents());
+                        side2_right_content.setText(sheet.getCell(1, index + 1).getContents());
+                    }
+                    else if(current_side_num == 3){
+                        String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                        title.setText(splitStr);
+                        side3_left_content.setText(sheet.getCell(1, index).getContents());
+                        side3_center_content.setText(sheet.getCell(1, index + 1).getContents());
+                        side3_right_content.setText(sheet.getCell(1, index + 2).getContents());
+                    }
+                }
+            }
+        });
+    }
+
+    public void bookmarkingInDB() {
+        bookmarking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cursor curr = realBMDBHelper.readIDRecord(index);
+                if (curr.getCount() > 0) {//북마크 존재 o
+                    showToast("즐겨찾기가 해제되었습니다.");
+                    bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
+                    realBMDBHelper.deleteRecord(index);
+                    dateDBHelper.deleteRecord(index);
+                } else {//북마크 존재 x
+                    bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
+                    realBMDBHelper.updateRecord(index);
+                    showToast("즐겨찾기가 설정되었습니다.");
+                    long now = System.currentTimeMillis();
+                    Date mDate = new Date(now);
+                    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    String getTime = simpleDate.format(mDate);
+                    dateDBHelper.insertRecord(index, getTime);
+                }
+            }
+        });
+    }
+
+    public void storeMemoInDB() {
+        /* 메모 저장 버튼 이벤트 part */
+        memo_store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    memoDBHelper.updateRecord(index, memo_content.getText().toString());
+                    showToast("메모 저장성공");
+                } catch (Exception e) {
+                    memoDBHelper.insertRecord(index, memo_content.getText().toString());
+                    showToast("메모 저장성공");
+                }
+            }
+        });
     }
     /*----------------------------------------------------------------------------------------------------- onCreate */
 
