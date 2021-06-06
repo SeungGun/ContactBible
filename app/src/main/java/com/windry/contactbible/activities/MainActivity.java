@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private String outer_str; // 성경배열을 받는 임시 변수
     private String mid_str;
     private String mid_reverse_str;
-    private String tempString;
-    private String receiveMsgFromJson;
+    private String tempString; // json 받는 임시 변수
+    private String receiveMsgFromJson; // 웹에서부터 받은 Json 전체 string
     private String bookName; // json 책
     private String chapter; // json 장
     private String verse; // json 절
@@ -238,10 +238,45 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     isKorean = true;
                     showToast("한글 모드");
                     ChangeLanguage(isKorean);
+                    if(current_side_num == 1){
+                        content.setText(korean_sheet.getCell(1, index).getContents());
+                        title.setText(korean_sheet.getCell(0,index).getContents());
+                    }
+                    else if(current_side_num == 2){
+                        side2_left_content.setText(korean_sheet.getCell(1,index).getContents());
+                        side2_right_content.setText(korean_sheet.getCell(1,index+1).getContents());
+                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
+                    }
+                    else if(current_side_num == 3){
+                        title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + ", " +
+                                korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
+                        side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
+                        side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                        side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                    }
                 } else {
                     isKorean = false;
                     showToast("영어 모드");
                     ChangeLanguage(isKorean);
+                    if(current_side_num == 1){
+                        content.setText(sheet.getCell(1, index).getContents());
+                        title.setText(sheet.getCell(0, index).getContents());
+                    }
+                    else if(current_side_num == 2){
+                        String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                                .getContents());
+                        title.setText(splitStr2);
+                        side2_left_content.setText(sheet.getCell(1, index).getContents());
+                        side2_right_content.setText(sheet.getCell(1, index + 1).getContents());
+                    }
+                    else if(current_side_num == 3){
+                        String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                        title.setText(splitStr);
+                        side3_left_content.setText(sheet.getCell(1, index).getContents());
+                        side3_center_content.setText(sheet.getCell(1, index + 1).getContents());
+                        side3_right_content.setText(sheet.getCell(1, index + 2).getContents());
+                    }
                 }
             }
         });
@@ -912,6 +947,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 }, 1500);
                             }
                             index++;
+                            content.setText("로딩 중");
+
                             dbHelper.updateRecord(index);
                             Cursor curr = realBMDBHelper.readIDRecord(index);
                             if (curr.getCount() > 0) {
@@ -920,7 +957,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
                             }
                             selectMEMODB();
-                            content.setText(sheet.getCell(1, index).getContents());
+
+                            connectHttpAndGetJson(sheet.getCell(0,index).getContents());
+                            try {
+                                parsingThread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            content.setText(/*sheet.getCell(1, index).getContents()*/text);
+                            Log.d("Title",bookName);
                             title.setText(sheet.getCell(0, index).getContents());
                         } else {
                             showToast("마지막 절입니다!");
@@ -4080,7 +4125,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         }
     }
-    public void connectHttpAndGetJson(String recv){
+    public String connectHttpAndGetJson(String recv){
         if(recv.contains(" ")){
             recv = recv.replace(' ','+');
         }
@@ -4119,6 +4164,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
         parsingThread.start();
+        return bookName;
     }
 
     public void parseJson(String jsonString){
@@ -4130,6 +4176,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 chapter = jsonObject.optString("chapter"); //ex : 3
                 verse = jsonObject.optString("verse"); // ex : 16
                 text = jsonObject.optString("text"); // ex : For .....~
+                Log.d("bookname",bookName);
+                Log.d("chapter",chapter);
+                Log.d("verse",verse);
+                Log.d("text",text);
             }
         }
         catch (JSONException e){
@@ -4137,6 +4187,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         thread.interrupt();
     }
+
 }
 
 

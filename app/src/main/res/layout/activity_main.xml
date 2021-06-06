@@ -120,7 +120,6 @@
                 android:layout_weight="4"
                 android:layout_height="0px"
                 android:fillViewport="true"
-                android:scrollbarAlwaysDrawVerticalTrack="true"
                 >
                 <LinearLayout
                     android:id="@+id/side2_left_layout"

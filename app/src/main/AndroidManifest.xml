@@ -23,6 +23,7 @@
         <activity android:name=".activities.ProgressBarActivity" />
         <activity android:name=".activities.BookMarkActivity" />
         <activity android:name=".activities.AppHelperActivity" />
-    </application>
 
+    </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
