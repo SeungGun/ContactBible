@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.HandlerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import jxl.Sheet;
@@ -24,7 +23,6 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -68,7 +66,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -185,84 +182,51 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         context_main = this;
 
-        dbHelper = new IndexDBHelper(this); // 현재 성경위치 대한 인덱스 데이터베이스
-        memoDBHelper = new MemoDBHelper(this); // 각 절마다의 적은 메모 데이터베이스
-        bmDBHelper = new BookMarkDBHelper(this); // 읽었는지 확인하는 데이터베이스
-        realBMDBHelper = new RealBMDBHelper(this); // 즐겨찾기한 항목 데이터베이스
-        dateDBHelper = new DateDBHelper(this); // 즐겨찾기한 날짜 데이터베이스
-        /* Initialize Index value */
+        /* 데이터베이스 객체 초기화 */
+        initializeDatabaseObj();
 
         /* 인스턴스 멤버 변수 초기화 findViewById() */
         initializeMemberVar();
 
-        try {
-            Cursor cursor = dbHelper.readRecord();
-            cursor.moveToFirst();
-            index = cursor.getInt(cursor.getColumnIndex("CURRENT"));
-        } catch (Exception e) {
-            index = 1;  // When occur index problem, reinitialize line
-        }
-        if (index > 31102) index = 1; // when index exceed limit
-        /*-----------------------------------------------------------*/
-        /* Thread to Read from the bible excel file */
-        excel_thread = new ReadExcelThread();
-        excel_thread.start();
-        try {
-            excel_thread.join();
-        } catch (InterruptedException e) {
-            Log.e("Error", e.getMessage());
-        }
-        koreanExcelThread = new ReadKoreanExcelThread();
-        koreanExcelThread.start();
-        try {
-            koreanExcelThread.join();
-        } catch (InterruptedException e) {
-            Log.e("Error", e.getMessage());
-        }
+        /* 데이터베이스에 저장한 Index 값 가져와서 초기 Index 설정 */
+        getInitialIndex();
 
-        /*-----------------------------------------*/
+        /* 엑셀 파일 읽는 Thread 시작 */
+        initialExcelFile();
+
+        /* 엑셀 index 위치 데이터 객체 초기화 */
         sheetNumList = new SheetNumList();
-        switchLanguage(); // 언어 변경 스위치
-        sideMenuAdapter = new SideMenuAdapter();
-        sideMidMenuAdapter = new SideMidMenuAdapter();
-        sideOuterMenuAdapter = new SideOuterMenuAdapter();
 
-        selectMEMODB(); // Set the initial screen's memo
+        /* 어댑터 객체 초기화 */
+        initializeAdapterObj();
 
-        /* show Initial Screen Contents */
-        content.setText(korean_sheet.getCell(1, index).getContents()); // chk
-        title.setText(korean_sheet.getCell(0, index).getContents()); // chk
+        /* 초기 설정된 index의 memo 내용 불러오기 */
+        selectMEMODB();
 
-        Cursor curs = realBMDBHelper.readIDRecord(index);
-        if (curs.getCount() > 0) {
-            bookmarking.setBackgroundResource(R.drawable.filled_bookmark); //chk
-        } else {
-            bookmarking.setBackgroundResource(R.drawable.bookmark_icon); //chk
-        }
+        /* 초기 제목과 내용 설정 */
+        content.setText(korean_sheet.getCell(1, index).getContents());
+        title.setText(korean_sheet.getCell(0, index).getContents());
+
+        /* 초기 북마크 값 가져오기 */
+        getInitialBookmark();
+
+        /*초기 화면 환경설정 setting - SharedPreference*/
+        initialEVSetting();
+
         gestureDetector = new GestureDetector(this);
-
         mediaPlayer = MediaPlayer.create(this, R.raw.calm_bgm);
 
-        /*---------------------------------------------------------------------------------------------- Initializes attributes and sets basic view */
-
+        /* 절 단위 모드 초기 설정 및 글씨 크기 조절 bar 초기 설정*/
         side_pref = getSharedPreferences("side", MODE_PRIVATE);
         final SharedPreferences.Editor editor = side_pref.edit();
 
         int initial_text_size = side_pref.getInt("text_size", 17); //chk
         textSize_control.setProgress(initial_text_size); //chk
-        /*Initialize through setting -----------------------------------------*/
-        initialEVSetting();
-        pref.registerOnSharedPreferenceChangeListener(listener);
 
-        /* 북마크 버튼 눌렀을 때 이벤트 part */
-        bookmarkingInDB();
-        /*----------------------------------------*/
-        storeMemoInDB(); // 메모 내용 저장 이벤트
-
-
-        /*--------------------------------------------------- List View & NaviBar 설정                                       */
+        /* List View & NaviBar설정 */
         for (String each : korean_bible_titleList) {
             sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.dot_icon), each);
         }
@@ -271,93 +235,38 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         list_thread = new ListClickThread();
         list_thread.start();
 
-        outer_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInnerSheet) {
-                    if (isKorean) {
-                        getString_mid_ListView(korean_bible_titleList[mid_index]);
-                        mid_Content.setAdapter(sideMidMenuAdapter);
-                    } else {
-                        getString_mid_ListView(bible_titleList[mid_index]);
-                        mid_Content.setAdapter(sideMidMenuAdapter);
-                    }
-                    isInnerSheet = false;
-                    isMidSheet = true;
-                    isOuterSheet = false;
-                    innerContent.setVisibility(View.GONE);
-                    mid_Content.setVisibility(View.VISIBLE);
-                    listView.setVisibility(View.GONE);
-                    language_switch.setVisibility(View.VISIBLE);
-                } else if (isMidSheet) {
-                    if (isKorean) {
-                        setOuterAdapter(korean_bible_titleList);
-                        listView.setAdapter(sideOuterMenuAdapter);
-                    } else {
-                        setOuterAdapter(bible_titleList);
-                        listView.setAdapter(sideOuterMenuAdapter);
-                    }
-                    isOuterSheet = true;
-                    isInnerSheet = false;
-                    isMidSheet = false;
-                    listView.setVisibility(View.VISIBLE);
-                    innerContent.setVisibility(View.GONE);
-                    mid_Content.setVisibility(View.GONE);
-                    outer_btn.setVisibility(View.INVISIBLE);
-                    language_switch.setVisibility(View.VISIBLE);
+        /*------------------------Initializes attributes and initial screen(basic view)--------------------------------------*/
 
-                }
-            }
-        });
-        /*-------------------------------------------------------------- */
-        memo_OnOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinearLayout memo_layout = findViewById(R.id.memo_layout);
-                if (!isOpen) {
-                    memo_layout.setVisibility(View.VISIBLE);
-                    bottom_menu.setVisibility(View.GONE);
-                    isOpen = true;
-                } else {
-                    memo_layout.setVisibility(View.GONE);
-                    bottom_menu.setVisibility(View.VISIBLE);
-                    isOpen = false;
-                }
-            }
-        });
+        /* drawer 메뉴 상단 뒤로 가기 버튼 이벤트 */
+        menuBackEvent();
 
-        quit_memo_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinearLayout memo_layout = findViewById(R.id.memo_layout);
-                if (memo_layout.getVisibility() == View.VISIBLE) {
-                    memo_layout.setVisibility(View.GONE);
-                    isOpen = false;
-                    bottom_menu.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        play_music.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isPlayed) {
-                    play_music.setBackgroundResource(R.drawable.pause_icon);
-                    mediaPlayer.start();
-                    mediaPlayer.setLooping(true);
-                    isPlayed = true;
-                } else {
-                    play_music.setBackgroundResource(R.drawable.play_icon);
-                    mediaPlayer.pause();
-                    isPlayed = false;
-                }
-            }
-        });
+        /* 메모창 열고 닫는 이벤트 */
+        memoOnOffEvent();
+
+        /* 메모창 닫는 버튼에 대한 이벤트 */
+        memoQuitEvent();
+
+        /* 음악 재생 이벤트 */
+        playMusicEvent();
+
+        /* 북마크 버튼 눌렀을 때 이벤트 */
+        bookmarkingInDB();
+
+        /* 메모내용 저장하는 이벤트 */
+        storeMemoInDB();
+
+        /* 언어 변경 스위치 버튼 이벤트 */
+        switchLanguage();
+
+        /*---------------------- Button Events extracted ---------------------------*/
+
         AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         control_volume.setText(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) + ""); //chk
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewInDialog = inflater.inflate(R.layout.alert_seekbar, null);
         SeekBar vol = viewInDialog.findViewById(R.id.sound_control);
         vol.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
         control_volume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -440,12 +349,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                 content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
-                Cursor curr = realBMDBHelper.readIDRecord(index);
-                if (curr.getCount() > 0) {//북마크 존재 o
-                    bookmarking.setBackgroundResource(R.drawable.filled_bookmark); // 채워짐으로
-                } else {//북마크 존재 x
-                    bookmarking.setBackgroundResource(R.drawable.bookmark_icon); // 비어짐으로
-                }
+                getInitialBookmark();
                 break;
             case 1:
                 if (!isKorean) {
@@ -560,12 +464,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         editor.putInt("side_mode", current_side_num);
                         editor.apply();
 
-                        Cursor curr = realBMDBHelper.readIDRecord(index);
-                        if (curr.getCount() > 0) {//북마크 존재 o
-                            bookmarking.setBackgroundResource(R.drawable.filled_bookmark); // 채워짐으로
-                        } else {//북마크 존재 x
-                            bookmarking.setBackgroundResource(R.drawable.bookmark_icon); // 비어짐으로
-                        }
+                        getInitialBookmark();
                         break;
                     case 1:
 
@@ -746,6 +645,148 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Log.e("Error", e.getMessage());
         }
 
+    }
+
+    public void menuBackEvent() {
+        outer_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isInnerSheet) {
+                    if (isKorean) {
+                        getString_mid_ListView(korean_bible_titleList[mid_index]);
+                        mid_Content.setAdapter(sideMidMenuAdapter);
+                    } else {
+                        getString_mid_ListView(bible_titleList[mid_index]);
+                        mid_Content.setAdapter(sideMidMenuAdapter);
+                    }
+                    isInnerSheet = false;
+                    isMidSheet = true;
+                    isOuterSheet = false;
+                    innerContent.setVisibility(View.GONE);
+                    mid_Content.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                    language_switch.setVisibility(View.VISIBLE);
+                } else if (isMidSheet) {
+                    if (isKorean) {
+                        setOuterAdapter(korean_bible_titleList);
+                        listView.setAdapter(sideOuterMenuAdapter);
+                    } else {
+                        setOuterAdapter(bible_titleList);
+                        listView.setAdapter(sideOuterMenuAdapter);
+                    }
+                    isOuterSheet = true;
+                    isInnerSheet = false;
+                    isMidSheet = false;
+                    listView.setVisibility(View.VISIBLE);
+                    innerContent.setVisibility(View.GONE);
+                    mid_Content.setVisibility(View.GONE);
+                    outer_btn.setVisibility(View.INVISIBLE);
+                    language_switch.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+    }
+
+    public void memoQuitEvent() {
+        quit_memo_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinearLayout memo_layout = findViewById(R.id.memo_layout);
+                if (memo_layout.getVisibility() == View.VISIBLE) {
+                    memo_layout.setVisibility(View.GONE);
+                    isOpen = false;
+                    bottom_menu.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public void memoOnOffEvent() {
+        memo_OnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinearLayout memo_layout = findViewById(R.id.memo_layout);
+                if (!isOpen) {
+                    memo_layout.setVisibility(View.VISIBLE);
+                    bottom_menu.setVisibility(View.GONE);
+                    isOpen = true;
+                } else {
+                    memo_layout.setVisibility(View.GONE);
+                    bottom_menu.setVisibility(View.VISIBLE);
+                    isOpen = false;
+                }
+            }
+        });
+    }
+
+    public void playMusicEvent() {
+        play_music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isPlayed) {
+                    play_music.setBackgroundResource(R.drawable.pause_icon);
+                    mediaPlayer.start();
+                    mediaPlayer.setLooping(true);
+                    isPlayed = true;
+                } else {
+                    play_music.setBackgroundResource(R.drawable.play_icon);
+                    mediaPlayer.pause();
+                    isPlayed = false;
+                }
+            }
+        });
+    }
+
+    public void getInitialBookmark() {
+        Cursor curs = realBMDBHelper.readIDRecord(index);
+        if (curs.getCount() > 0) {
+            bookmarking.setBackgroundResource(R.drawable.filled_bookmark); //chk
+        } else {
+            bookmarking.setBackgroundResource(R.drawable.bookmark_icon); //chk
+        }
+    }
+
+    public void initializeAdapterObj() {
+        sideMenuAdapter = new SideMenuAdapter();
+        sideMidMenuAdapter = new SideMidMenuAdapter();
+        sideOuterMenuAdapter = new SideOuterMenuAdapter();
+    }
+
+    public void initialExcelFile() {
+        excel_thread = new ReadExcelThread();
+        excel_thread.start();
+        try {
+            excel_thread.join();
+        } catch (InterruptedException e) {
+            Log.e("Error", e.getMessage());
+        }
+        koreanExcelThread = new ReadKoreanExcelThread();
+        koreanExcelThread.start();
+        try {
+            koreanExcelThread.join();
+        } catch (InterruptedException e) {
+            Log.e("Error", e.getMessage());
+        }
+    }
+
+    public void getInitialIndex() {
+        try {
+            Cursor cursor = dbHelper.readRecord();
+            cursor.moveToFirst();
+            index = cursor.getInt(cursor.getColumnIndex("CURRENT"));
+        } catch (Exception e) {
+            index = 1;  // When occur index problem, reinitialize line
+        }
+        if (index > 31102) index = 1; // when index exceed limit
+    }
+
+    public void initializeDatabaseObj() {
+        dbHelper = new IndexDBHelper(this); // 현재 성경위치 대한 인덱스 데이터베이스
+        memoDBHelper = new MemoDBHelper(this); // 각 절마다의 적은 메모 데이터베이스
+        bmDBHelper = new BookMarkDBHelper(this); // 읽었는지 확인하는 데이터베이스
+        realBMDBHelper = new RealBMDBHelper(this); // 즐겨찾기한 항목 데이터베이스
+        dateDBHelper = new DateDBHelper(this); // 즐겨찾기한 날짜 데이터베이스
     }
 
     public void initializeMemberVar() {
@@ -933,6 +974,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             side3_center_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
             side3_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
         }
+        pref.registerOnSharedPreferenceChangeListener(listener);
     }
 
     /*---------------------------------------------------------------------------------------------------화면 터치 이벤트*/
@@ -959,12 +1001,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             index++;
 
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
 
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
@@ -989,12 +1026,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                             index++;
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
                             content.setText(korean_sheet.getCell(1, index).getContents());
                             title.setText(korean_sheet.getCell(0, index).getContents());
@@ -1115,12 +1147,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             title.setText(sheet.getCell(0, index).getContents());
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
                             if (cursor.getCount() > 0) {
@@ -1133,12 +1160,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
 
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
                             if (cursor.getCount() > 0) {
@@ -1272,12 +1294,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     index++;
                     dbHelper.updateRecord(index);
-                    Cursor curr = realBMDBHelper.readIDRecord(index);
-                    if (curr.getCount() > 0) {
-                        bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                    } else {
-                        bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                    }
+                    getInitialBookmark();
                     selectMEMODB();
                     setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
                     title.setText(sheet.getCell(0, index).getContents());
@@ -1300,12 +1317,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     index++;
                     dbHelper.updateRecord(index);
-                    Cursor curr = realBMDBHelper.readIDRecord(index);
-                    if (curr.getCount() > 0) {
-                        bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                    } else {
-                        bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                    }
+                    getInitialBookmark();
                     selectMEMODB();
                     content.setText(korean_sheet.getCell(1, index).getContents());
                     title.setText(korean_sheet.getCell(0, index).getContents());
@@ -1459,12 +1471,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                             index++;
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
                             title.setText(sheet.getCell(0, index).getContents());
@@ -1487,12 +1494,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                             index++;
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             selectMEMODB();
                             content.setText(korean_sheet.getCell(1, index).getContents());
                             title.setText(korean_sheet.getCell(0, index).getContents());
@@ -1616,12 +1618,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 //                            content.setText(sheet.getCell(1, index).getContents());
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
                             if (cursor.getCount() > 0) {
                                 bmDBHelper.deleteRecord(index + 1);
@@ -1632,12 +1629,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             title.setText(korean_sheet.getCell(0, index).getContents());
                             content.setText(korean_sheet.getCell(1, index).getContents());
                             dbHelper.updateRecord(index);
-                            Cursor curr = realBMDBHelper.readIDRecord(index);
-                            if (curr.getCount() > 0) {
-                                bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                            } else {
-                                bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                            }
+                            getInitialBookmark();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
                             if (cursor.getCount() > 0) {
                                 bmDBHelper.deleteRecord(index + 1);
@@ -1873,12 +1865,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                                     index = findIndex(sideMenuAdapter.getItem(i).getTitle());
                                                 else
                                                     index = findKoreanIndex(sideMenuAdapter.getItem(i).getTitle());
-                                                Cursor curr = realBMDBHelper.readIDRecord(index);
-                                                if (curr.getCount() > 0) {
-                                                    bookmarking.setBackgroundResource(R.drawable.filled_bookmark);
-                                                } else {
-                                                    bookmarking.setBackgroundResource(R.drawable.bookmark_icon);
-                                                }
+                                                getInitialBookmark();
                                                 dbHelper.updateRecord(index);
                                                 selectMEMODB();
                                                 drawerLayout.closeDrawers();
@@ -2108,12 +2095,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onStart() {
         super.onStart();
-        Cursor curr = realBMDBHelper.readIDRecord(index);
-        if (curr.getCount() > 0) {//북마크 존재 o
-            bookmarking.setBackgroundResource(R.drawable.filled_bookmark); // 채워짐으로
-        } else {//북마크 존재 x
-            bookmarking.setBackgroundResource(R.drawable.bookmark_icon); // 비어짐으로
-        }
+        getInitialBookmark();
     }
 
     /*------------------------------------------------------------------------------------------------------- onStart() */
@@ -4243,7 +4225,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             e.printStackTrace();
         }
     }
-
 }
 
 
