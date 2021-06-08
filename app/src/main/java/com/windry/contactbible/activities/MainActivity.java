@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     listView.setVisibility(View.VISIBLE);
                     innerContent.setVisibility(View.GONE);
                     mid_Content.setVisibility(View.GONE);
-                    outer_btn.setVisibility(View.GONE);
+                    outer_btn.setVisibility(View.INVISIBLE);
                     language_switch.setVisibility(View.VISIBLE);
 
                 }
@@ -1931,7 +1931,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /*---------------------------------------------------------------------------------------------------------- ListClickThread */
     public int findIndex(String str) {
-        for (int i = 1; i <= 31102; i++) {
+        for (int i = 1; i <= 31102; ++i) {
             if (sheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
@@ -1941,7 +1941,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /*---------------------------------------------------------------------------------------------------------- findIndex() */
     public int findKoreanIndex(String str) {
-        for (int i = 1; i <= 31102; i++) {
+        for (int i = 1; i <= 31102; ++i) {
             if (korean_sheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
@@ -2048,7 +2048,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 listView.setVisibility(View.VISIBLE);
                 innerContent.setVisibility(View.GONE);
                 mid_Content.setVisibility(View.GONE);
-                outer_btn.setVisibility(View.GONE);
+                outer_btn.setVisibility(View.INVISIBLE);
             } else if (isOuterSheet)
                 drawerLayout.closeDrawers();
         } else {
@@ -2109,7 +2109,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (!isKorean) {
             switch (titleName) {
                 case "Genesis":
-                    for (int i = 1; i <= 50; i++) {
+                    for (int i = 1; i <= 50; ++i) {
                         sheetNumList.GetGenesisVerse("Genesis " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Genesis " + i)) {
@@ -2120,7 +2120,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Exodus":
-                    for (int i = 1; i <= 40; i++) {
+                    for (int i = 1; i <= 40; ++i) {
                         sheetNumList.GetExodusVerse("Exodus " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Exodus " + i))
@@ -2130,7 +2130,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Leviticus":
-                    for (int i = 1; i <= 27; i++) {
+                    for (int i = 1; i <= 27; ++i) {
                         sheetNumList.GetLeviticusVerse("Leviticus " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Leviticus " + i))
@@ -2140,7 +2140,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Numbers":
-                    for (int i = 1; i <= 36; i++) {
+                    for (int i = 1; i <= 36; ++i) {
                         sheetNumList.GetNumbersVerse("Numbers " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Numbers " + i))
@@ -2150,7 +2150,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Deuteronomy":
-                    for (int i = 1; i <= 34; i++) {
+                    for (int i = 1; i <= 34; ++i) {
                         sheetNumList.GetDeuteronomyVerse("Deuteronomy " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Deuteronomy " + i))
@@ -2160,7 +2160,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Joshua":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetJoshuaVerse("Joshua " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Joshua " + i))
@@ -2170,7 +2170,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Judges":
-                    for (int i = 1; i <= 21; i++) {
+                    for (int i = 1; i <= 21; ++i) {
                         sheetNumList.GetJudgesVerse("Judges " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Judges " + i))
@@ -2180,7 +2180,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Ruth":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetRuthVerse("Ruth " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Ruth " + i))
@@ -2190,7 +2190,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Samuel":
-                    for (int i = 1; i <= 31; i++) {
+                    for (int i = 1; i <= 31; ++i) {
                         sheetNumList.GetSamuel1Verse("1 Samuel " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Samuel " + i))
@@ -2200,7 +2200,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Samuel":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetSamuel2Verse("2 Samuel " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Samuel " + i))
@@ -2210,7 +2210,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Kings":
-                    for (int i = 1; i <= 22; i++) {
+                    for (int i = 1; i <= 22; ++i) {
                         sheetNumList.GetKing1Verse("1 Kings " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Kings " + i))
@@ -2220,7 +2220,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Kings":
-                    for (int i = 1; i <= 25; i++) {
+                    for (int i = 1; i <= 25; ++i) {
                         sheetNumList.GetKing2Verse("2 Kings " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Kings " + i))
@@ -2230,7 +2230,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Chronicles":
-                    for (int i = 1; i <= 29; i++) {
+                    for (int i = 1; i <= 29; ++i) {
                         sheetNumList.GetChronicles1Verse("1 Chronicles " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Chronicles " + i))
@@ -2240,7 +2240,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Chronicles":
-                    for (int i = 1; i <= 36; i++) {
+                    for (int i = 1; i <= 36; ++i) {
                         sheetNumList.GetChronicles2Verse("2 Chronicles " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Chronicles " + i))
@@ -2250,7 +2250,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Ezra":
-                    for (int i = 1; i <= 10; i++) {
+                    for (int i = 1; i <= 10; ++i) {
                         sheetNumList.GetEzraVerse("Ezra " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Ezra " + i))
@@ -2260,7 +2260,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Nehemiah":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetNehemiahVerse("Nehemiah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Nehemiah " + i))
@@ -2270,7 +2270,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Esther":
-                    for (int i = 1; i <= 10; i++) {
+                    for (int i = 1; i <= 10; ++i) {
                         sheetNumList.GetEstherVerse("Esther " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Esther " + i))
@@ -2280,7 +2280,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Job":
-                    for (int i = 1; i <= 42; i++) {
+                    for (int i = 1; i <= 42; ++i) {
                         sheetNumList.GetJobVerse("Job " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Job " + i))
@@ -2290,7 +2290,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Psalms":
-                    for (int i = 1; i <= 150; i++) {
+                    for (int i = 1; i <= 150; ++i) {
                         sheetNumList.GetPsalmsVerse("Psalms " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Psalms " + i))
@@ -2300,7 +2300,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Proverbs":
-                    for (int i = 1; i <= 31; i++) {
+                    for (int i = 1; i <= 31; ++i) {
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Proverbs " + i))
                             sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked_icon), "Proverbs " + i);
@@ -2309,7 +2309,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Ecclesiastes":
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 12; ++i) {
                         sheetNumList.GetEcclesiastesVerse("Ecclesiastes " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Ecclesiastes " + i))
@@ -2319,7 +2319,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Song of Solomon":
-                    for (int i = 1; i <= 8; i++) {
+                    for (int i = 1; i <= 8; ++i) {
                         sheetNumList.GetSolomonVerse("Song of Solomon " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Song of Solomon " + i))
@@ -2329,7 +2329,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Isaiah":
-                    for (int i = 1; i <= 66; i++) {
+                    for (int i = 1; i <= 66; ++i) {
                         sheetNumList.GetIsaiahVerse("Isaiah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Isaiah " + i))
@@ -2339,7 +2339,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Jeremiah":
-                    for (int i = 1; i <= 52; i++) {
+                    for (int i = 1; i <= 52; ++i) {
                         sheetNumList.GetJeremiahVerse("Jeremiah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Jeremiah " + i))
@@ -2349,7 +2349,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Lamentations":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetLamentationsVerse("Lamentations " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Lamentations " + i))
@@ -2359,7 +2359,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Ezekiel":
-                    for (int i = 1; i <= 48; i++) {
+                    for (int i = 1; i <= 48; ++i) {
                         sheetNumList.GetEzekielVerse("Ezekiel " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Ezekiel " + i))
@@ -2369,7 +2369,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Daniel":
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 12; ++i) {
                         sheetNumList.GetDanielVerse("Daniel " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Daniel " + i))
@@ -2379,7 +2379,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Hosea":
-                    for (int i = 1; i <= 14; i++) {
+                    for (int i = 1; i <= 14; ++i) {
                         sheetNumList.GetHoseaVerse("Hosea " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Hosea " + i))
@@ -2389,7 +2389,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Joel":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetJoelVerse("Joel " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Joel " + i))
@@ -2399,7 +2399,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Amos":
-                    for (int i = 1; i <= 9; i++) {
+                    for (int i = 1; i <= 9; ++i) {
                         sheetNumList.GetAmosVerse("Amos " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Amos " + i))
@@ -2409,7 +2409,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Obadiah":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetObadiahVerse("Obadiah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Obadiah " + i))
@@ -2419,7 +2419,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Jonah":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetObadiahVerse("Jonah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Jonah " + i))
@@ -2429,7 +2429,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Micah":
-                    for (int i = 1; i <= 7; i++) {
+                    for (int i = 1; i <= 7; ++i) {
                         sheetNumList.GetMicahVerse("Micah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Micah " + i))
@@ -2439,7 +2439,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Nahum":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetNahumVerse("Nahum " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Nahum " + i))
@@ -2449,7 +2449,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Habakkuk":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetHabakkukVerse("Habakkuk " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Habakkuk " + i))
@@ -2459,7 +2459,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Zephaniah":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetZephaniahVerse("Zephaniah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Zephaniah " + i))
@@ -2469,7 +2469,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Haggai":
-                    for (int i = 1; i <= 2; i++) {
+                    for (int i = 1; i <= 2; ++i) {
                         sheetNumList.GetHaggaiVerse("Haggai " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Haggai " + i))
@@ -2479,7 +2479,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Zechariah":
-                    for (int i = 1; i <= 14; i++) {
+                    for (int i = 1; i <= 14; ++i) {
                         sheetNumList.GetZechariahVerse("Zechariah " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Zechariah " + i))
@@ -2489,7 +2489,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Malachi":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetMalachiVerse("Malachi " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Malachi " + i))
@@ -2499,7 +2499,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Matthew":
-                    for (int i = 1; i <= 28; i++) {
+                    for (int i = 1; i <= 28; ++i) {
                         sheetNumList.GetMatthewVerse("Matthew " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Matthew " + i))
@@ -2509,7 +2509,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Mark":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetMarkVerse("Mark " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Mark " + i))
@@ -2519,7 +2519,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Luke":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetLukeVerse("Luke " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Luke " + i))
@@ -2529,7 +2529,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "John":
-                    for (int i = 1; i <= 21; i++) {
+                    for (int i = 1; i <= 21; ++i) {
                         sheetNumList.GetJohnVerse("John " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("John " + i))
@@ -2539,7 +2539,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Acts":
-                    for (int i = 1; i <= 28; i++) {
+                    for (int i = 1; i <= 28; ++i) {
                         sheetNumList.GetActsVerse("Acts " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Acts " + i))
@@ -2549,7 +2549,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Romans":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetRomansVerse("Romans " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Romans " + i))
@@ -2559,7 +2559,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Corinthians":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetCorinthians1Verse("1 Corinthians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Corinthians " + i))
@@ -2569,7 +2569,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Corinthians":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetCorinthians2Verse("2 Corinthians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Corinthians " + i))
@@ -2579,7 +2579,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Galatians":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetGalatiansVerse("Galatians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Galatians " + i))
@@ -2589,7 +2589,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Ephesians":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetEphesiansVerse("Ephesians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Ephesians " + i))
@@ -2599,7 +2599,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Philippians":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetPhilippiansVerse("Philippians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Philippians " + i))
@@ -2609,7 +2609,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Colossians":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetColossiansVerse("Colossians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Colossians " + i))
@@ -2619,7 +2619,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Thessalonians":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetThessalonians1Verse("1 Thessalonians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Thessalonians " + i))
@@ -2629,7 +2629,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Thessalonians":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetThessalonians2Verse("2 Thessalonians " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Thessalonians " + i))
@@ -2639,7 +2639,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Timothy":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetTimothy1Verse("1 Timothy " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Timothy " + i))
@@ -2649,7 +2649,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Timothy":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetTimothy2Verse("2 Timothy " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Timothy " + i))
@@ -2659,7 +2659,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Titus":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetTitusVerse("Titus " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Titus " + i))
@@ -2669,7 +2669,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Philemon":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetPhilemonVerse("Philemon " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Philemon " + i))
@@ -2679,7 +2679,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Hebrews":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetHebrewsVerse("Hebrews " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Hebrews " + i))
@@ -2689,7 +2689,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "James":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetJamesVerse("James " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("James " + i))
@@ -2699,7 +2699,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 Peter":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetPeter1Verse("1 Peter " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("1 Peter " + i))
@@ -2709,7 +2709,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 Peter":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetPeter2Verse("2 Peter " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 Peter " + i))
@@ -2719,7 +2719,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "1 John":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetJohn1Verse("1 John " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Genesis " + i))
@@ -2729,7 +2729,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "2 John":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJohn2Verse("2 John " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("2 John " + i))
@@ -2739,7 +2739,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "3 John":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJohn3Verse("3 John " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("3 John " + i))
@@ -2749,7 +2749,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Jude":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJudeVerse("Jude " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Jude " + i))
@@ -2759,7 +2759,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "Revelation":
-                    for (int i = 1; i <= 22; i++) {
+                    for (int i = 1; i <= 22; ++i) {
                         sheetNumList.GetRevelationVerse("Revelation " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("Revelation " + i))
@@ -2774,7 +2774,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } else {
             switch (titleName) {
                 case "창세기":
-                    for (int i = 1; i <= 50; i++) {
+                    for (int i = 1; i <= 50; ++i) {
                         sheetNumList.GetGenesisVerse("창세기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("창세기 " + i)) {
@@ -2785,7 +2785,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "출애굽기":
-                    for (int i = 1; i <= 40; i++) {
+                    for (int i = 1; i <= 40; ++i) {
                         sheetNumList.GetExodusVerse("출애굽기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("출애굽기 " + i))
@@ -2795,7 +2795,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "레위기":
-                    for (int i = 1; i <= 27; i++) {
+                    for (int i = 1; i <= 27; ++i) {
                         sheetNumList.GetLeviticusVerse("레위기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("레위기 " + i))
@@ -2805,7 +2805,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "민수기":
-                    for (int i = 1; i <= 36; i++) {
+                    for (int i = 1; i <= 36; ++i) {
                         sheetNumList.GetNumbersVerse("민수기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("민수기 " + i))
@@ -2815,7 +2815,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "신명기":
-                    for (int i = 1; i <= 34; i++) {
+                    for (int i = 1; i <= 34; ++i) {
                         sheetNumList.GetDeuteronomyVerse("신명기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("신명기 " + i))
@@ -2825,7 +2825,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "여호수아":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetJoshuaVerse("여호수아 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("여호수아 " + i))
@@ -2835,7 +2835,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "사사기":
-                    for (int i = 1; i <= 21; i++) {
+                    for (int i = 1; i <= 21; ++i) {
                         sheetNumList.GetJudgesVerse("사사기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("사사기 " + i))
@@ -2845,7 +2845,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "룻기":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetRuthVerse("룻기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("룻기 " + i))
@@ -2855,7 +2855,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "사무엘상":
-                    for (int i = 1; i <= 31; i++) {
+                    for (int i = 1; i <= 31; ++i) {
                         sheetNumList.GetSamuel1Verse("사무엘상 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("사무엘상 " + i))
@@ -2865,7 +2865,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "사무엘하":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetSamuel2Verse("사무엘하 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("사무엘하 " + i))
@@ -2875,7 +2875,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "열왕기상":
-                    for (int i = 1; i <= 22; i++) {
+                    for (int i = 1; i <= 22; ++i) {
                         sheetNumList.GetKing1Verse("열왕기상 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("열왕기상 " + i))
@@ -2885,7 +2885,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "열왕기하":
-                    for (int i = 1; i <= 25; i++) {
+                    for (int i = 1; i <= 25; ++i) {
                         sheetNumList.GetKing2Verse("열왕기하 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("열왕기하 " + i))
@@ -2895,7 +2895,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "역대상":
-                    for (int i = 1; i <= 29; i++) {
+                    for (int i = 1; i <= 29; ++i) {
                         sheetNumList.GetChronicles1Verse("역대상 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("역대상 " + i))
@@ -2905,7 +2905,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "역대하":
-                    for (int i = 1; i <= 36; i++) {
+                    for (int i = 1; i <= 36; ++i) {
                         sheetNumList.GetChronicles2Verse("역대하 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("역대하 " + i))
@@ -2915,7 +2915,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "에스라":
-                    for (int i = 1; i <= 10; i++) {
+                    for (int i = 1; i <= 10; ++i) {
                         sheetNumList.GetEzraVerse("에스라 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("에스라 " + i))
@@ -2925,7 +2925,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "느헤미야":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetNehemiahVerse("느헤미야 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("느헤미야 " + i))
@@ -2935,7 +2935,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "에스더":
-                    for (int i = 1; i <= 10; i++) {
+                    for (int i = 1; i <= 10; ++i) {
                         sheetNumList.GetEstherVerse("에스더 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("에스더 " + i))
@@ -2945,7 +2945,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "욥기":
-                    for (int i = 1; i <= 42; i++) {
+                    for (int i = 1; i <= 42; ++i) {
                         sheetNumList.GetJobVerse("욥기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("욥기 " + i))
@@ -2955,7 +2955,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "시편":
-                    for (int i = 1; i <= 150; i++) {
+                    for (int i = 1; i <= 150; ++i) {
                         sheetNumList.GetPsalmsVerse("시편 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("시편 " + i))
@@ -2965,7 +2965,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "잠언":
-                    for (int i = 1; i <= 31; i++) {
+                    for (int i = 1; i <= 31; ++i) {
                         sheetNumList.GetProverbsVerse("잠언 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("잠언 " + i))
@@ -2975,7 +2975,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "전도서":
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 12; ++i) {
                         sheetNumList.GetEcclesiastesVerse("전도서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("전도서 " + i))
@@ -2985,7 +2985,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "아가":
-                    for (int i = 1; i <= 8; i++) {
+                    for (int i = 1; i <= 8; ++i) {
                         sheetNumList.GetSolomonVerse("아가 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("아가 " + i))
@@ -2995,7 +2995,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "이사야":
-                    for (int i = 1; i <= 66; i++) {
+                    for (int i = 1; i <= 66; ++i) {
                         sheetNumList.GetIsaiahVerse("이사야 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("이사야 " + i))
@@ -3005,7 +3005,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "예레미야":
-                    for (int i = 1; i <= 52; i++) {
+                    for (int i = 1; i <= 52; ++i) {
                         sheetNumList.GetJeremiahVerse("예레미야 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("예레미야 " + i))
@@ -3015,7 +3015,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "예레미야애가":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetLamentationsVerse("예레미야애가 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("예레미야애가 " + i))
@@ -3025,7 +3025,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "에스겔":
-                    for (int i = 1; i <= 48; i++) {
+                    for (int i = 1; i <= 48; ++i) {
                         sheetNumList.GetEzekielVerse("에스겔 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("에스겔 " + i))
@@ -3035,7 +3035,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "다니엘":
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 12; ++i) {
                         sheetNumList.GetDanielVerse("다니엘 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("다니엘 " + i))
@@ -3045,7 +3045,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "호세아":
-                    for (int i = 1; i <= 14; i++) {
+                    for (int i = 1; i <= 14; ++i) {
                         sheetNumList.GetHoseaVerse("호세아 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("호세아 " + i))
@@ -3055,7 +3055,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요엘":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetJoelVerse("요엘 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요엘 " + i))
@@ -3065,7 +3065,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "아모스":
-                    for (int i = 1; i <= 9; i++) {
+                    for (int i = 1; i <= 9; ++i) {
                         sheetNumList.GetAmosVerse("아모스 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("아모스 " + i))
@@ -3075,7 +3075,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "오바댜":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetObadiahVerse("오바댜 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("오바댜 " + i))
@@ -3085,7 +3085,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요나":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetJonahVerse("요나 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요나 " + i))
@@ -3095,7 +3095,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "미가":
-                    for (int i = 1; i <= 7; i++) {
+                    for (int i = 1; i <= 7; ++i) {
                         sheetNumList.GetMicahVerse("미가 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("미가 " + i))
@@ -3105,7 +3105,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "나훔":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetNahumVerse("나훔 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("나훔 " + i))
@@ -3115,7 +3115,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "하박국":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetHabakkukVerse("하박국 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("하박국 " + i))
@@ -3125,7 +3125,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "스바냐":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetZephaniahVerse("스바냐 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("스바냐 " + i))
@@ -3135,7 +3135,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "학개":
-                    for (int i = 1; i <= 2; i++) {
+                    for (int i = 1; i <= 2; ++i) {
                         sheetNumList.GetHaggaiVerse("학개 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("학개 " + i))
@@ -3145,7 +3145,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "스가랴":
-                    for (int i = 1; i <= 14; i++) {
+                    for (int i = 1; i <= 14; ++i) {
                         sheetNumList.GetZechariahVerse("스가랴 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("스가랴 " + i))
@@ -3155,7 +3155,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "말라기":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetMalachiVerse("말라기 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("말라기 " + i))
@@ -3165,7 +3165,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "마태복음":
-                    for (int i = 1; i <= 28; i++) {
+                    for (int i = 1; i <= 28; ++i) {
                         sheetNumList.GetMatthewVerse("마태복음 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("마태복음 " + i))
@@ -3175,7 +3175,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "마가복음":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetMarkVerse("마가복음 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("마가복음 " + i))
@@ -3185,7 +3185,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "누가복음":
-                    for (int i = 1; i <= 24; i++) {
+                    for (int i = 1; i <= 24; ++i) {
                         sheetNumList.GetLukeVerse("누가복음 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("누가복음 " + i))
@@ -3195,7 +3195,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요한복음":
-                    for (int i = 1; i <= 21; i++) {
+                    for (int i = 1; i <= 21; ++i) {
                         sheetNumList.GetJohnVerse("요한복음 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요한복음 " + i))
@@ -3205,7 +3205,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "사도행전":
-                    for (int i = 1; i <= 28; i++) {
+                    for (int i = 1; i <= 28; ++i) {
                         sheetNumList.GetActsVerse("사도행전 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("사도행전 " + i))
@@ -3215,7 +3215,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "로마서":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetRomansVerse("로마서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("로마서 " + i))
@@ -3225,7 +3225,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "고린도전서":
-                    for (int i = 1; i <= 16; i++) {
+                    for (int i = 1; i <= 16; ++i) {
                         sheetNumList.GetCorinthians1Verse("고린도전서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("고린도전서 " + i))
@@ -3235,7 +3235,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "고린도후서":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetChronicles2Verse("고린도후서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("고린도후서 " + i))
@@ -3245,7 +3245,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "갈라디아서":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetGalatiansVerse("갈라디아서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("갈라디아서 " + i))
@@ -3255,7 +3255,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "에베소서":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetEphesiansVerse("에베소서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("에베소서 " + i))
@@ -3265,7 +3265,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "빌립보서":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetPhilippiansVerse("빌립보서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("빌립보서 " + i))
@@ -3275,7 +3275,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "골로새서":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetColossiansVerse("골로새서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("골로새서 " + i))
@@ -3285,7 +3285,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "데살로니가전서":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetThessalonians1Verse("데살로니가전서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("데살로니가전서 " + i))
@@ -3295,7 +3295,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "데살로니가후서":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetThessalonians2Verse("데살로니가후서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("데살로니가후서 " + i))
@@ -3305,7 +3305,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "디모데전서":
-                    for (int i = 1; i <= 6; i++) {
+                    for (int i = 1; i <= 6; ++i) {
                         sheetNumList.GetTimothy1Verse("디모데전서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("디모데전서 " + i))
@@ -3315,7 +3315,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "디모데후서":
-                    for (int i = 1; i <= 4; i++) {
+                    for (int i = 1; i <= 4; ++i) {
                         sheetNumList.GetTimothy2Verse("디모데전서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("디모데후서 " + i))
@@ -3325,7 +3325,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "디도서":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetTitusVerse("디도서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("디도서 " + i))
@@ -3335,7 +3335,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "빌레몬서":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetPhilemonVerse("빌레몬서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("빌레몬서 " + i))
@@ -3345,7 +3345,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "히브리서":
-                    for (int i = 1; i <= 13; i++) {
+                    for (int i = 1; i <= 13; ++i) {
                         sheetNumList.GetHebrewsVerse("히브리서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("히브리서 " + i))
@@ -3355,7 +3355,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "야고보서":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetJamesVerse("야고보서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("야고보서 " + i))
@@ -3365,7 +3365,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "베드로전서":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetPeter1Verse("베드로전서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("베드로전서 " + i))
@@ -3375,7 +3375,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "베드로후서":
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 3; ++i) {
                         sheetNumList.GetPeter2Verse("베드로후서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("베드로후서 " + i))
@@ -3385,7 +3385,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요한일서":
-                    for (int i = 1; i <= 5; i++) {
+                    for (int i = 1; i <= 5; ++i) {
                         sheetNumList.GetJohn1Verse("요한일서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요한일서 " + i))
@@ -3395,7 +3395,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요한이서":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJohn2Verse("요한이서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요한이서 " + i))
@@ -3405,7 +3405,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요한삼서":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJohn3Verse("요한삼서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요한삼서 " + i))
@@ -3415,7 +3415,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "유다서":
-                    for (int i = 1; i <= 1; i++) {
+                    for (int i = 1; i <= 1; ++i) {
                         sheetNumList.GetJudeVerse("유다서 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("유다서 " + i))
@@ -3425,7 +3425,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     break;
                 case "요한계시록":
-                    for (int i = 1; i <= 22; i++) {
+                    for (int i = 1; i <= 22; ++i) {
                         sheetNumList.GetRevelationVerse("요한계시록 " + i);
                         estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
                         if (isAllRead("요한계시록 " + i))
@@ -3719,7 +3719,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 break;
         }
         isAll.clear();
-        for (int i = sheetNumList.beginIdx; i <= sheetNumList.endIdx; i++) {
+        for (int i = sheetNumList.beginIdx; i <= sheetNumList.endIdx; ++i) {
             Cursor cursor = bmDBHelper.readIDRecord(i);
             if (cursor.getCount() > 0) {
                 if (!isKorean) {
@@ -4132,7 +4132,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     public void estimateIsAll(int start, int finish) {
         isAll.clear();
-        for (int i = start; i <= finish; i++) {
+        for (int i = start; i <= finish; ++i) {
             Cursor cursor = bmDBHelper.readIDRecord(i);
             if (cursor.getCount() > 0) {
                 isAll.add(true);
