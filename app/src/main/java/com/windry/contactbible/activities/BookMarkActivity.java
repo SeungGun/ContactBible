@@ -202,7 +202,7 @@ public class BookMarkActivity extends AppCompatActivity {
         listView.setAdapter(bookMarkAdapter);
     }
     public int findIndex(String str){
-        for(int i = 1; i<=31102; i++){
+        for(int i = 1; i<=31102; ++i){
             if(demo_sheet.getCell(0,i).getContents().equals(str)){
                 return i;
             }
@@ -210,7 +210,7 @@ public class BookMarkActivity extends AppCompatActivity {
         return 0;
     }
     public int findIndex2(String str){
-        for(int i = 1; i<=31102; i++){
+        for(int i = 1; i<=31102; ++i){
             if(demo_sheet.getCell(1,i).getContents().equals(str.substring(str.indexOf("\n")+1))){
                 return i;
             }
@@ -218,7 +218,7 @@ public class BookMarkActivity extends AppCompatActivity {
         return 0;
     }
     public int findKoreanIndex(String str){
-        for(int i = 1; i<=31102; i++){
+        for(int i = 1; i<=31102; ++i){
             if(korean_demo_sheet.getCell(0,i).getContents().equals(str)){
                 return i;
             }
@@ -226,7 +226,7 @@ public class BookMarkActivity extends AppCompatActivity {
         return 0;
     }
     public int findKoreanIndex2(String str){
-        for(int i = 1; i<=31102; i++){
+        for(int i = 1; i<=31102; ++i){
             if(korean_demo_sheet.getCell(1,i).getContents().equals(str.substring(str.indexOf("\n")+1))){
                 return i;
             }
