@@ -14,18 +14,13 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:background="#5E92C4">
-        <TextView
+
+        <ImageView
             android:layout_width="0px"
             android:layout_weight="2.5"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:gravity="left"
-            android:text="Bible"
-            android:textColor="#FFFFFF"
-            android:textSize="8pt"
-            android:paddingLeft="7dp"
-            android:textStyle="bold"/>
-        >
+            android:background="@drawable/ic_baseline_language_24"/>
         <TextView
             android:id="@+id/english_text"
         android:layout_width="0px"

@@ -9,17 +9,16 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:background="@drawable/bottom_btn_design">
-        <Button
+        <ImageButton
             android:layout_width="0px"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:background="@drawable/left_arrow"
-            android:layout_marginLeft="10dp"
+            android:layout_weight="1.3"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_baseline_chevron_left_24"
             android:layout_gravity="center_vertical"
             android:id="@+id/bookmark_back"/>
         <TextView
             android:layout_width="0px"
-            android:layout_weight="9"
+            android:layout_weight="8.7"
             android:layout_height="match_parent"
             android:text="즐겨찾기"
             android:textSize="14pt"

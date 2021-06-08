@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ public class ProgressBarActivity extends AppCompatActivity {
     private TextView percentage;
     private TextView percentage_old;
     private TextView percentage_new;
-    private Button progress_back;
+    private ImageButton progress_back;
     private static int count = 0;
     private static int oldCount = 0;
     private static int newCount = 0;

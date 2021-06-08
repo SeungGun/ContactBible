@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ public class BookMarkActivity extends AppCompatActivity {
     private ListView listView;
     private boolean[] opened;
     private BookMarkAdapter bookMarkAdapter;
-    private Button back_btn;
+    private ImageButton back_btn;
     private boolean isLeak = false;
     private DateDBHelper dateDBHelper;
     private boolean isKorean;
