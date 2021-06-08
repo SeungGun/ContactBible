@@ -3451,6 +3451,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } else {
             splitStr = title.split(" ")[0];
         }
+        Log.d("splitStr",splitStr);
         switch (splitStr) {
             case "Genesis":
             case "창세기":
@@ -3492,11 +3493,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             case "사무엘하":
                 sheetNumList.GetSamuel2Verse(title);
                 break;
-            case "1 King":
+            case "1 Kings":
             case "열왕기상":
                 sheetNumList.GetKing1Verse(title);
                 break;
-            case "2 King":
+            case "2 Kings":
             case "열왕기하":
                 sheetNumList.GetKing2Verse(title);
                 break;
@@ -3803,7 +3804,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         String[] splited = str.split(" ");
         String subStr = "";
         String subNum = "";
-        if (isKorean) {
+        if (!isKorean) {
             if (splited.length == 3) { // 상하 존재
                 subStr = splited[0] + " " + splited[1];
                 subNum = splited[2];

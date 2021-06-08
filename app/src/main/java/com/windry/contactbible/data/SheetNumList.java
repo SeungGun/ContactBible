@@ -1504,112 +1504,112 @@ public class SheetNumList {
     }
     public void GetKing1Verse(String sheetTitle){
         switch (sheetTitle){
-            case "1 King 1":
+            case "1 Kings 1":
             case "열왕기상 1":
                 beginIdx = 8719;
                 endIdx = 8771;
                 break;
-            case "1 King 2":
+            case "1 Kings 2":
             case "열왕기상 2":
                 beginIdx = 8772;
                 endIdx = 8817;
                 break;
-            case "1 King 3":
+            case "1 Kings 3":
             case "열왕기상 3":
                 beginIdx = 8818;
                 endIdx = 8845;
                 break;
-            case "1 King 4":
+            case "1 Kings 4":
             case "열왕기상 4":
                 beginIdx = 8846;
                 endIdx = 8879;
                 break;
-            case "1 King 5":
+            case "1 Kings 5":
             case "열왕기상 5":
                 beginIdx = 8880;
                 endIdx = 8897;
                 break;
-            case "1 King 6":
+            case "1 Kings 6":
             case "열왕기상 6":
                 beginIdx = 8898;
                 endIdx = 8935;
                 break;
-            case "1 King 7":
+            case "1 Kings 7":
             case "열왕기상 7":
                 beginIdx = 8936;
                 endIdx = 8986;
                 break;
-            case "1 King 8":
+            case "1 Kings 8":
             case "열왕기상 8":
                 beginIdx = 8987;
                 endIdx = 9052;
                 break;
-            case "1 King 9":
+            case "1 Kings 9":
             case "열왕기상 9":
                 beginIdx = 9053;
                 endIdx = 9080;
                 break;
-            case "1 King 10":
+            case "1 Kings 10":
             case "열왕기상 10":
                 beginIdx = 9081;
                 endIdx = 9109;
                 break;
-            case "1 King 11":
+            case "1 Kings 11":
             case "열왕기상 11":
                 beginIdx = 9110;
                 endIdx = 9152;
                 break;
-            case "1 King 12":
+            case "1 Kings 12":
             case "열왕기상 12":
                 beginIdx = 9153;
                 endIdx = 9158;
                 break;
-            case "1 King 13":
+            case "1 Kings 13":
             case "열왕기상 13":
                 beginIdx = 9159;
                 endIdx = 9219;
                 break;
-            case "1 King 14":
+            case "1 Kings 14":
             case "열왕기상 14":
                 beginIdx = 9220;
                 endIdx = 9250;
                 break;
-            case "1 King 15":
+            case "1 Kings 15":
             case "열왕기상 15":
                 beginIdx = 9251;
                 endIdx = 9284;
                 break;
-            case "1 King 16":
+            case "1 Kings 16":
             case "열왕기상 16":
                 beginIdx = 9285;
                 endIdx = 9318;
                 break;
-            case "1 King 17":
+            case "1 Kings 17":
             case "열왕기상 17":
                 beginIdx = 9319;
                 endIdx = 9342;
                 break;
-            case "1 King 18":
+            case "1 Kings 18":
             case "열왕기상 18":
                 beginIdx = 9343;
                 endIdx = 9388;
                 break;
-            case "1 King 19":
+            case "1 Kings 19":
             case "열왕기상 19":
                 beginIdx = 9389;
                 endIdx = 9409;
                 break;
-            case "1 King 20":
+            case "1 Kings 20":
             case "열왕기상 20":
                 beginIdx = 9410;
                 endIdx = 9452;
                 break;
-            case "1 King 21":
+            case "1 Kings 21":
             case "열왕기상 21":
                 beginIdx = 9453;
                 endIdx = 9481;
                 break;
-            case "1 King 22":
+            case "1 Kings 22":
             case "열왕기상 22":
                 beginIdx = 9482;
                 endIdx = 9534;
@@ -1618,127 +1618,127 @@ public class SheetNumList {
     }
     public void GetKing2Verse(String sheetTitle){
         switch (sheetTitle){
-            case "2 King 1":
+            case "2 Kings 1":
             case "열왕기하 1":
                 beginIdx = 9535;
                 endIdx = 9552;
                 break;
-            case "2 King 2":
+            case "2 Kings 2":
             case "열왕기하 2":
                 beginIdx = 9553;
                 endIdx = 9577;
                 break;
-            case "2 King 3":
+            case "2 Kings 3":
             case "열왕기하 3":
                 beginIdx = 9578;
                 endIdx = 9604;
                 break;
-            case "2 King 4":
+            case "2 Kings 4":
             case "열왕기하 4":
                 beginIdx = 9605;
                 endIdx = 9648;
                 break;
-            case "2 King 5":
+            case "2 Kings 5":
             case "열왕기하 5":
                 beginIdx = 9649;
                 endIdx = 9675;
                 break;
-            case "2 King 6":
+            case "2 Kings 6":
             case "열왕기하 6":
                 beginIdx = 9676;
                 endIdx = 9708;
                 break;
-            case "2 King 7":
+            case "2 Kings 7":
             case "열왕기하 7":
                 beginIdx = 9709;
                 endIdx = 9728;
                 break;
-            case "2 King 8":
+            case "2 Kings 8":
             case "열왕기하 8":
                 beginIdx = 9729;
                 endIdx = 9757;
                 break;
-            case "2 King 9":
+            case "2 Kings 9":
             case "열왕기하 9":
                 beginIdx = 9758;
                 endIdx = 9794;
                 break;
-            case "2 King 10":
+            case "2 Kings 10":
             case "열왕기하 10":
                 beginIdx = 9795;
                 endIdx = 9830;
                 break;
-            case "2 King 11":
+            case "2 Kings 11":
             case "열왕기하 11":
                 beginIdx = 9831;
                 endIdx = 9851;
                 break;
-            case "2 King 12":
+            case "2 Kings 12":
             case "열왕기하 12":
                 beginIdx = 9582;
                 endIdx = 9872;
                 break;
-            case "2 King 13":
+            case "2 Kings 13":
             case "열왕기하 13":
                 beginIdx = 9873;
                 endIdx = 9897;
                 break;
-            case "2 King 14":
+            case "2 Kings 14":
             case "열왕기하 14":
                 beginIdx = 9898;
                 endIdx = 9926;
                 break;
-            case "2 King 15":
+            case "2 Kings 15":
             case "열왕기하 15":
                 beginIdx = 9927;
                 endIdx = 9964;
                 break;
-            case "2 King 16":
+            case "2 Kings 16":
             case "열왕기하 16":
                 beginIdx = 9965;
                 endIdx = 9984;
                 break;
-            case "2 King 17":
+            case "2 Kings 17":
             case "열왕기하 17":
                 beginIdx = 9985;
                 endIdx = 10025;
                 break;
-            case "2 King 18":
+            case "2 Kings 18":
             case "열왕기하 18":
                 beginIdx = 10026;
                 endIdx = 10062;
                 break;
-            case "2 King 19":
+            case "2 Kings 19":
             case "열왕기하 19":
                 beginIdx = 10063;
                 endIdx = 10099;
                 break;
-            case "2 King 20":
+            case "2 Kings 20":
             case "열왕기하 20":
                 beginIdx = 10100;
                 endIdx = 10120;
                 break;
-            case "2 King 21":
+            case "2 Kings 21":
             case "열왕기하 21":
                 beginIdx = 10121;
                 endIdx = 10146;
                 break;
-            case "2 King 22":
+            case "2 Kings 22":
             case "열왕기하 22":
                 beginIdx = 10147;
                 endIdx = 10166;
                 break;
-            case "2 King 23":
+            case "2 Kings 23":
             case "열왕기하 23":
                 beginIdx = 10167;
                 endIdx = 10203;
                 break;
-            case "2 King 24":
+            case "2 Kings 24":
             case "열왕기하 24":
                 beginIdx = 10204;
                 endIdx = 10223;
                 break;
-            case "2 King 25":
+            case "2 Kings 25":
             case "열왕기하 25":
                 beginIdx = 10224;
                 endIdx = 10253;
