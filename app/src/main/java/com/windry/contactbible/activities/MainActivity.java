@@ -70,6 +70,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/*NET Bible Web Service (API)
+https://labs.bible.org/api_web_service */
+
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
     public static Context context_main; // 현재 액티비티
 
@@ -1157,8 +1160,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
 
                             title.setText(korean_sheet.getCell(0, index).getContents());
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-
+                            content.setText(korean_sheet.getCell(1,index).getContents());
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
