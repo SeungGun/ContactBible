@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private GestureDetector gestureDetector;
     private NaviBarThread thread; // 사이드바 움직임 쓰레드
-    private GoMainmenuThread gomain_thread; // 메인화면 이동 쓰레드
     private ListClickThread list_thread; // 사이드바 in/out 쓰레드
     private ReadExcelThread excel_thread; // 엑셀 읽기 쓰레드
     private ReadKoreanExcelThread koreanExcelThread;
@@ -630,24 +629,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 return true;
             }
         });
-        /*-------------------------------------------------------- MainMenu Thread */
-        gomain_thread = new GoMainmenuThread();
-        gomain_thread.start();
-        try {
-            gomain_thread.join();
-        } catch (InterruptedException e) {
-            Log.e("Error", e.getMessage());
-        }
+
+        /* moving to MainMenu */
+        goto_main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), MainMenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /*-------------------------------------------------------- Side Bar Thread */
         thread = new NaviBarThread();
         thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            Log.e("Error", e.getMessage());
-        }
-
     }
 
     public void menuBackEvent() {
@@ -771,6 +765,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } catch (InterruptedException e) {
             Log.e("Error", e.getMessage());
         }
+
     }
 
     public void getInitialIndex() {
@@ -1957,7 +1952,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             drawerLayout = findViewById(R.id.drawer_layout);
             drawerView = findViewById(R.id.drawer);
         }
-
         public void run() {
             ImageButton btn_open = findViewById(R.id.btn_open); //상단바만들고 ImageButton으로 바꿔도 됨
             btn_open.setOnClickListener(new View.OnClickListener() {
@@ -1973,29 +1967,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     drawerLayout.closeDrawers();
                 }
             });
-            drawerView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return true;
-                }
-            });
-            DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
-                @Override
-                public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                }
-
-                @Override
-                public void onDrawerOpened(@NonNull View drawerView) {
-                }
-
-                @Override
-                public void onDrawerClosed(@NonNull View drawerView) {
-                }
-
-                @Override
-                public void onDrawerStateChanged(int newState) {
-                }
-            };
         }
     }
 
@@ -2068,19 +2039,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         realBMDBHelper.close();
         mediaPlayer.release();
         super.onDestroy();
-    }
-
-    /*-------------------------------------------------------------------------------------------------------- onDestroy()*/
-    private class GoMainmenuThread extends Thread {
-        public void run() {
-            goto_main.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), MainMenuActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
     }
 
     /*-------------------------------------------------------------------------------------------------------- GoMainmenuThread */
@@ -3448,7 +3406,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } else {
             splitStr = title.split(" ")[0];
         }
-        Log.d("splitStr", splitStr);
         switch (splitStr) {
             case "Genesis":
             case "창세기":
@@ -4144,7 +4101,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             recv = recv.replace(' ', '+');
         }
         final String finalReceive = recv;
-        Log.d("receive", finalReceive);
+
         if (currSide == 1) {
             content.setText("로딩 중입니다.");
         } else if (currSide == 2) {

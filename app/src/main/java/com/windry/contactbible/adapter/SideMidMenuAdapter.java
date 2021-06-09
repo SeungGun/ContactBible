@@ -16,55 +16,74 @@ import java.util.ArrayList;
 
 public class SideMidMenuAdapter extends BaseAdapter {
     private ArrayList<SideMidMenuItem> bmItems = new ArrayList<>();
+
     @Override
-    public int getCount(){
+    public int getCount() {
         return bmItems.size();
     }
+
     @Override
-    public SideMidMenuItem getItem(int position){
+    public SideMidMenuItem getItem(int position) {
         return bmItems.get(position);
     }
-    @Override
-    public long getItemId(int position){
-        return 0;
-    }
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        Context context = parent.getContext();
-        //demo_sheet = ((MainActivity)MainActivity.context_main).sheet; // 메인액티비티 클래스의 변수를 가져옴
 
-        if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.side_midmenu_listview_custom,parent,false);
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Context context = parent.getContext();
+        ViewHolder viewHolder;
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.side_midmenu_listview_custom, parent, false);
+
+            ImageView img = convertView.findViewById(R.id.color_back);
+            TextView main_title = convertView.findViewById(R.id.mid_main);
+
+            viewHolder.img = img;
+            viewHolder.main_title = main_title;
+
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        ImageView img = convertView.findViewById(R.id.color_back);
-        TextView main_title = convertView.findViewById(R.id.mid_main);
-        SideMidMenuItem myitem = bmItems.get(position);
-        img.setImageDrawable(myitem.getBackColor());
-        main_title.setText(myitem.getTitle());
-
-
+        SideMidMenuItem myItem = bmItems.get(position);
+        viewHolder.img.setImageDrawable(myItem.getBackColor());
+        viewHolder.main_title.setText(myItem.getTitle());
 
         return convertView;
     }
-    public void addItem(Drawable img, String title){
+
+    static class ViewHolder {
+        ImageView img;
+        TextView main_title;
+    }
+
+    public void addItem(Drawable img, String title) {
         SideMidMenuItem items = new SideMidMenuItem();
         items.setBackColor(img);
         items.setTitle(title);
         bmItems.add(items);
-
     }
-    public void setItem(int pos,Drawable img,String title){
+
+    public void setItem(int pos, Drawable img, String title) {
         SideMidMenuItem item = new SideMidMenuItem();
         item.setBackColor(img);
         item.setTitle(title);
-        bmItems.set(pos,item);
+        bmItems.set(pos, item);
     }
-    public void removeItem(int pos){
+
+    public void removeItem(int pos) {
         bmItems.remove(pos);
     }
-    public void clearItem(){
+
+    public void clearItem() {
         bmItems.clear();
     }
 }

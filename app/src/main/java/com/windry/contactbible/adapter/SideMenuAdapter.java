@@ -9,78 +9,81 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.windry.contactbible.database.BookMarkDBHelper;
 import com.windry.contactbible.R;
 import com.windry.contactbible.data.SideMenuItem;
-import com.windry.contactbible.activities.MainActivity;
 
 import java.util.ArrayList;
-import jxl.Sheet;
 
 public class SideMenuAdapter extends BaseAdapter {
     private ArrayList<SideMenuItem> bmItems = new ArrayList<>();
-    private Sheet demo_sheet;
+
     @Override
-    public int getCount(){
+    public int getCount() {
         return bmItems.size();
     }
+
     @Override
-    public SideMenuItem getItem(int position){
+    public SideMenuItem getItem(int position) {
         return bmItems.get(position);
     }
+
     @Override
-    public long getItemId(int position){
-        return 0;
+    public long getItemId(int position) {
+        return position;
     }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
+        ViewHolder holder;
 
-        BookMarkDBHelper bmDBhelper = new BookMarkDBHelper(context.getApplicationContext());
-        demo_sheet = ((MainActivity)MainActivity.context_main).sheet; // 메인액티비티 클래스의 변수를 가져옴
+        if (convertView == null) {
+            holder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.side_menu_listview_custom, parent, false);
 
+            ImageView img = convertView.findViewById(R.id.point_dot);
+            TextView main_title = convertView.findViewById(R.id.main_title);
 
-        if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.side_menu_listview_custom,parent,false);
+            holder.img = img;
+            holder.main_title = main_title;
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView img = convertView.findViewById(R.id.point_dot);
-        TextView main_title = convertView.findViewById(R.id.main_title);
-        SideMenuItem myitem = bmItems.get(position);
-        img.setImageDrawable(myitem.getPoint());
-        main_title.setText(myitem.getTitle());
-
-
+        SideMenuItem myItem = bmItems.get(position);
+        holder.img.setImageDrawable(myItem.getPoint());
+        holder.main_title.setText(myItem.getTitle());
 
         return convertView;
     }
-    public void addItem(Drawable img, String title){
-            SideMenuItem items = new SideMenuItem();
-            items.setPoint(img);
-            items.setTitle(title);
-            bmItems.add(items);
 
+    static class ViewHolder {
+        ImageView img;
+        TextView main_title;
     }
-    public void setItem(int pos,Drawable img,String title){
+
+    public void addItem(Drawable img, String title) {
+        SideMenuItem items = new SideMenuItem();
+        items.setPoint(img);
+        items.setTitle(title);
+        bmItems.add(items);
+    }
+
+    public void setItem(int pos, Drawable img, String title) {
         SideMenuItem item = new SideMenuItem();
         item.setPoint(img);
         item.setTitle(title);
-        bmItems.set(pos,item);
+        bmItems.set(pos, item);
     }
-    public void removeItem(int pos){
+
+    public void removeItem(int pos) {
         bmItems.remove(pos);
     }
 
-    private int findIndex(String str){
-        for(int i = 1; i<=31102; i++){
-            if(demo_sheet.getCell(0,i).getContents().equals(str)){
-                return i;
-            }
-        }
-        return 0;
-    }
-    public void clearItem(){
+    public void clearItem() {
         bmItems.clear();
     }
 }
