@@ -5,16 +5,20 @@ import android.graphics.drawable.Drawable;
 public class SideMidMenuItem {
     String title;
     Drawable backColor;
-    public String getTitle(){
+
+    public String getTitle() {
         return this.title;
     }
-    public void setTitle(String newTitle){
+
+    public void setTitle(String newTitle) {
         this.title = newTitle;
     }
-    public Drawable getBackColor(){
+
+    public Drawable getBackColor() {
         return this.backColor;
     }
-    public void setBackColor(Drawable backColor){
+
+    public void setBackColor(Drawable backColor) {
         this.backColor = backColor;
     }
 }
