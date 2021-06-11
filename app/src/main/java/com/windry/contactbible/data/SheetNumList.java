@@ -5682,7 +5682,7 @@ public class SheetNumList {
             case "Galatians 6":
             case "갈라디아서 6":
                 beginIdx = 29190;
-                endIdx = 29207;
+                endIdx = 29206;
                 break;
         }
     }
@@ -5690,33 +5690,33 @@ public class SheetNumList {
         switch (sheetTitle){
             case "Ephesians 1":
             case "에베소서 1":
-                beginIdx = 29208;
-                endIdx = 29230;
+                beginIdx = 29207;
+                endIdx = 29229;
                 break;
             case "Ephesians 2":
             case "에베소서 2":
-                beginIdx = 29231;
-                endIdx = 29252;
+                beginIdx = 29230;
+                endIdx = 29251;
                 break;
             case "Ephesians 3":
             case "에베소서 3":
-                beginIdx = 29253;
-                endIdx = 29273;
+                beginIdx = 29252;
+                endIdx = 29272;
                 break;
             case "Ephesians 4":
             case "에베소서 4":
-                beginIdx = 29274;
-                endIdx = 29305;
+                beginIdx = 29273;
+                endIdx = 29304;
                 break;
             case "Ephesians 5":
             case "에베소서 5":
-                beginIdx = 29306;
-                endIdx = 29338;
+                beginIdx = 29305;
+                endIdx = 29337;
                 break;
             case "Ephesians 6":
             case "에베소서 6":
-                beginIdx = 29339;
-                endIdx = 29362;
+                beginIdx = 29338;
+                endIdx = 29361;
                 break;
         }
     }
@@ -5724,23 +5724,23 @@ public class SheetNumList {
         switch (sheetTitle){
             case "Philippians 1":
             case "빌립보서 1":
-                beginIdx = 29363;
-                endIdx = 29392;
+                beginIdx = 29362;
+                endIdx = 29391;
                 break;
             case "Philippians 2":
             case "빌립보서 2":
-                beginIdx = 29393;
-                endIdx = 29422;
+                beginIdx = 29392;
+                endIdx = 29421;
                 break;
             case "Philippians 3":
             case "빌립보서 3":
-                beginIdx = 29423;
-                endIdx = 29443;
+                beginIdx = 29422;
+                endIdx = 29442;
                 break;
             case "Philippians 4":
             case "빌립보서 4":
-                beginIdx = 29444;
-                endIdx = 29466;
+                beginIdx = 29443;
+                endIdx = 29465;
                 break;
         }
     }
@@ -5748,22 +5748,22 @@ public class SheetNumList {
         switch (sheetTitle){
             case "Colossians 1":
             case "골로새서 1":
-                beginIdx = 29467;
-                endIdx = 29495;
+                beginIdx = 29466;
+                endIdx = 29494;
                 break;
             case "Colossians 2":
             case "골로새서 2":
-                beginIdx = 29496;
-                endIdx = 29518;
+                beginIdx = 29495;
+                endIdx = 29517;
                 break;
             case "Colossians 3":
             case "골로새서 3":
-                beginIdx = 29519;
-                endIdx = 29543;
+                beginIdx = 29518;
+                endIdx = 29542;
                 break;
             case "Colossians 4":
             case "골로새서 4":
-                beginIdx = 29544;
+                beginIdx = 29543;
                 endIdx = 29560;
                 break;
         }
