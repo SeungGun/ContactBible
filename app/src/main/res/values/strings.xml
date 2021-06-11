@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">컨택 바이블</string>
     <string name="tablename">SEUNG</string>
+    <string name="read_continue">이어서 읽기</string>
+    <string name="today_verse">오늘의 구절</string>
+    <string name="check_progress">진도율 확인</string>
+    <string name="bookmark">즐겨찾기</string>
+    <string name="helper">도움말</string>
+    <string name="ev_setting">환경설정</string>
 </resources>

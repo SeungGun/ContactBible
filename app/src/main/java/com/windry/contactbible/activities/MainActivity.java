@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
     private int mid_index = 0;
+    public final static int MAX_ROW_EXCEL = 31102;
 
     private boolean isOpen = false; // 메모장 열렸는지 판단
     private boolean isInnerSheet = false; // 사이드메뉴 Inner인지 아닌지 판단
@@ -471,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     case 1:
 
                         if (!isKorean) {
-                            if (index + 1 <= 31102) {
+                            if (index + 1 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
                                 bookmarking.setVisibility(View.INVISIBLE);
                                 side1_layout.setVisibility(View.GONE);
@@ -497,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 seekBar.setProgress(0, true);
                             }
                         } else {
-                            if (index + 1 <= 31102) {
+                            if (index + 1 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
                                 bookmarking.setVisibility(View.INVISIBLE);
                                 side1_layout.setVisibility(View.GONE);
@@ -524,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     case 2:
 
                         if (!isKorean) {
-                            if (index + 2 <= 31102) {
+                            if (index + 2 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
                                 bookmarking.setVisibility(View.INVISIBLE);
                                 side1_layout.setVisibility(View.GONE);
@@ -550,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 seekBar.setProgress(0, true);
                             }
                         } else {
-                            if (index + 2 <= 31102) {
+                            if (index + 2 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
                                 bookmarking.setVisibility(View.INVISIBLE);
                                 side1_layout.setVisibility(View.GONE);
@@ -776,7 +777,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } catch (Exception e) {
             index = 1;  // When occur index problem, reinitialize line
         }
-        if (index > 31102) index = 1; // when index exceed limit
+        if (index > MAX_ROW_EXCEL) index = 1; // when index exceed limit
     }
 
     public void initializeDatabaseObj() {
@@ -983,7 +984,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (side1_layout.getVisibility() == View.VISIBLE) {
                     bmDBHelper.updateRecord(index, "true");
                     if (!isKorean) {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1009,7 +1010,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             showToast("마지막 절입니다!");
                         }
                     } else {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 1).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1037,7 +1038,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index, "true");
                     bmDBHelper.updateRecord(index + 1, "true");
                     if (!isKorean) {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1060,7 +1061,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                         }
                     } else {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1084,7 +1085,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index + 1, "true");
                     bmDBHelper.updateRecord(index + 2, "true");
                     if (!isKorean) {
-                        if (index + 3 < 31102) {
+                        if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1111,7 +1112,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             showToast("마지막 절입니다!");
                         }
                     } else {
-                        if (index + 3 < 31102) {
+                        if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1275,7 +1276,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (side1_layout.getVisibility() == View.VISIBLE) {
             bmDBHelper.updateRecord(index, "true");
             if (!isKorean) {
-                if (index < 31102) {
+                if (index < MAX_ROW_EXCEL) {
                     if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1326,7 +1327,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bmDBHelper.updateRecord(index, "true");
             bmDBHelper.updateRecord(index + 1, "true");
             if (!isKorean) {
-                if (index + 2 < 31102) {
+                if (index + 2 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1350,7 +1351,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     showToast("마지막 절입니다!");
                 }
             } else {
-                if (index + 2 < 31102) {
+                if (index + 2 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1377,7 +1378,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bmDBHelper.updateRecord(index + 1, "true");
             bmDBHelper.updateRecord(index + 2, "true");
             if (!isKorean) {
-                if (index + 3 < 31102) {
+                if (index + 3 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1403,7 +1404,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     showToast("마지막 절입니다!");
                 }
             } else {
-                if (index + 3 < 31102) {
+                if (index + 3 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1453,7 +1454,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (side1_layout.getVisibility() == View.VISIBLE) {
                     bmDBHelper.updateRecord(index, "true");
                     if (!isKorean) {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1476,7 +1477,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             showToast("마지막 절입니다!");
                         }
                     } else {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 1).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1504,7 +1505,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index, "true");
                     bmDBHelper.updateRecord(index + 1, "true");
                     if (!isKorean) {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1526,7 +1527,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
                         }
                     } else {
-                        if (index < 31102) {
+                        if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1550,7 +1551,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index + 1, "true");
                     bmDBHelper.updateRecord(index + 2, "true");
                     if (!isKorean) {
-                        if (index + 3 < 31102) {
+                        if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1577,7 +1578,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             showToast("마지막 절입니다!");
                         }
                     } else {
-                        if (index + 3 < 31102) {
+                        if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
@@ -1726,43 +1727,51 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (s.equals("ThemeColor")) {
-                top_menu.setBackgroundColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
-                bottom_menu.setBackgroundColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
+            switch (s) {
+                case "ThemeColor":
+                    top_menu.setBackgroundColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
+                    bottom_menu.setBackgroundColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
 
-                GradientDrawable bottom_center = (GradientDrawable) bottom_center_menu.getBackground();
-                bottom_center.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
+                    GradientDrawable bottom_center = (GradientDrawable) bottom_center_menu.getBackground();
+                    bottom_center.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
 
-                GradientDrawable bottom_right = (GradientDrawable) bottom_right_menu.getBackground();
-                bottom_right.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
+                    GradientDrawable bottom_right = (GradientDrawable) bottom_right_menu.getBackground();
+                    bottom_right.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
 
-                GradientDrawable bottom_left = (GradientDrawable) goto_main.getBackground();
-                bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
-            } else if (s.equals("letterSpace")) {
-                float val = (float) pref.getInt("letterSpace", 0) / 10;
-                content.setLetterSpacing(val);
-            } else if (s.equals("lineSpace")) {
-                float val = (float) pref.getInt("lineSpace", 0) / 10 + 1;
-                content.setLineSpacing(0, val);
-                side2_left_content.setLineSpacing(0, val);
-                side2_right_content.setLineSpacing(0, val);
+                    GradientDrawable bottom_left = (GradientDrawable) goto_main.getBackground();
+                    bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
+                    break;
+                case "letterSpace": {
+                    float val = (float) pref.getInt("letterSpace", 0) / 10;
+                    content.setLetterSpacing(val);
+                    break;
+                }
+                case "lineSpace": {
+                    float val = (float) pref.getInt("lineSpace", 0) / 10 + 1;
+                    content.setLineSpacing(0, val);
+                    side2_left_content.setLineSpacing(0, val);
+                    side2_right_content.setLineSpacing(0, val);
 
-                side3_left_content.setLineSpacing(0, val);
-                side3_center_content.setLineSpacing(0, val);
-                side2_right_content.setLineSpacing(0, val);
-            } else if (s.equals("BackgroundColor")) {
-                above_content_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
-                side1_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
-                side2_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
-                side3_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
+                    side3_left_content.setLineSpacing(0, val);
+                    side3_center_content.setLineSpacing(0, val);
+                    side2_right_content.setLineSpacing(0, val);
+                    break;
+                }
+                case "BackgroundColor":
+                    above_content_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
+                    side1_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
+                    side2_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
+                    side3_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
 
-            } else if (s.equals("TextColor")) {
-                content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                side2_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                side2_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                side3_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                side3_center_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                side3_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    break;
+                case "TextColor":
+                    content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side2_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side2_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side3_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side3_center_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side3_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    break;
             }
         }
     };
@@ -1928,7 +1937,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /*---------------------------------------------------------------------------------------------------------- ListClickThread */
     public int findIndex(String str) {
-        for (int i = 1; i <= 31102; ++i) {
+        for (int i = 1; i <= MAX_ROW_EXCEL; ++i) {
             if (sheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
@@ -1938,7 +1947,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /*---------------------------------------------------------------------------------------------------------- findIndex() */
     public int findKoreanIndex(String str) {
-        for (int i = 1; i <= 31102; ++i) {
+        for (int i = 1; i <= MAX_ROW_EXCEL; ++i) {
             if (korean_sheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
