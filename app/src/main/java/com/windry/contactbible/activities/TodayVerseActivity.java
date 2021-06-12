@@ -5,8 +5,10 @@ import jxl.Sheet;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -36,6 +38,8 @@ public class TodayVerseActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private String[] korList;
     private String[] engList;
+    private LinearLayout loadingScr;
+    private LinearLayout mainScr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +50,23 @@ public class TodayVerseActivity extends AppCompatActivity {
         todayTitle = findViewById(R.id.today_title);
         todayList = findViewById(R.id.today_list);
         languageToggle = findViewById(R.id.language_toggle);
+        loadingScr = findViewById(R.id.loading_scr);
+        mainScr = findViewById(R.id.today_scr);
+        getTodayVerseFromJson();
         languageToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
+                if(b) {
+                    adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, engList);
+                    todayTitle.setText(bibleList[0].createEntireTitleEng(bibleList));
+                }
+                else {
+                    adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
+                    todayTitle.setText(bibleList[0].createEntireTitleKor(bibleList));
+                }
+                todayList.setAdapter(adapter);
             }
         });
-        getTodayVerseFromJson();
     }
 
     public void getTodayVerseFromJson() {
@@ -95,10 +109,53 @@ public class TodayVerseActivity extends AppCompatActivity {
         }).start();
     }
 
+    public void getTodayVerseFromJson(String str, final int index) {
+        if(str.contains(" ")){
+            str = str.replace(' ','+');
+        }
+        final String finalStr = str;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://labs.bible.org/api/?passage="+ finalStr +"&type=json");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+                    String tempString;
+                    final String receiveMsgFromJson;
+                    if (connection.getResponseCode() == connection.HTTP_OK) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+                        BufferedReader reader = new BufferedReader(inputStreamReader);
+                        StringBuffer buffer = new StringBuffer();
+                        while ((tempString = reader.readLine()) != null) {
+                            buffer.append(tempString); // 읽어온 각 String 값을 임시 버퍼에 이어붙이기
+                        }
+                        receiveMsgFromJson = buffer.toString();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                parseJsonAsFormat(receiveMsgFromJson, index);
+                            }
+                        });
+                        reader.close();
+
+                    } else {
+                        Log.e("통신 실패", connection.getResponseCode() + " 에러");
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
     public void getVerseText() {
+
         for (int i = 0; i < indexList.length; ++i) {
             korList[i] = korSheet.getCell(1, indexList[i]).getContents();
-            engList[i] = engSheet.getCell(1, indexList[i]).getContents();
         }
     }
 
@@ -110,12 +167,29 @@ public class TodayVerseActivity extends AppCompatActivity {
         }
         return 0;
     }
+    public void parseJsonAsFormat(String jsonString, int index){
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+//            indexList = new int[jsonArray.length()];
+//            bibleList = new Bible[jsonArray.length()];
+//            korList = new String[indexList.length];
+//            engList = new String[indexList.length];
 
+            for (int i = 0; i < jsonArray.length(); ++i) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                engList[index] = jsonObject.optString("text");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void parseJson(String jsonString) {
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
             indexList = new int[jsonArray.length()];
             bibleList = new Bible[jsonArray.length()];
+            korList = new String[indexList.length];
+            engList = new String[indexList.length];
             for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String book = jsonObject.optString("bookname");
@@ -125,9 +199,15 @@ public class TodayVerseActivity extends AppCompatActivity {
 
                 indexList[i] = findIndex(bibleList[i].createFormatted());
                 bibleList[i].korBook = korSheet.getCell(0, indexList[i]).getContents().split(" ")[0];
+                getTodayVerseFromJson(bibleList[i].createFormatted(), i);
             }
             getVerseText();
-            todayTitle.setText(bibleList[0].createEntireTitleEng(bibleList) + ", " + bibleList[0].createEntireTitleKor(bibleList));
+
+            todayTitle.setText(bibleList[0].createEntireTitleKor(bibleList));
+            adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
+            todayList.setAdapter(adapter);
+            loadingScr.setVisibility(View.GONE);
+            mainScr.setVisibility(View.VISIBLE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
