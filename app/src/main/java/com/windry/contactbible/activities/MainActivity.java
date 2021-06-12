@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private LinearLayout bottom_center_menu;
     private LinearLayout bottom_right_menu;
     private LinearLayout above_content_layout;
+    private LinearLayout loadingMenu;
 
     private TextView content; // 1절 단위 시 내용 보여주는 Text View
     private TextView title; // 상단바에 보여지는 제목 Text View
@@ -660,8 +661,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     isInnerSheet = false;
                     isMidSheet = true;
                     isOuterSheet = false;
+                    loadingMenu.setVisibility(View.VISIBLE);
                     innerContent.setVisibility(View.GONE);
-                    mid_Content.setVisibility(View.VISIBLE);
                     listView.setVisibility(View.GONE);
                     language_switch.setVisibility(View.VISIBLE);
                 } else if (isMidSheet) {
@@ -828,6 +829,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         side3_center_content = findViewById(R.id.side3_center_text);
         side3_right_content = findViewById(R.id.side3_right_text);
         above_content_layout = findViewById(R.id.above_content_layout);
+        loadingMenu = findViewById(R.id.loading_scr_inMenu);
 
         side_mode = findViewById(R.id.side_mode);
         textSize_control = findViewById(R.id.seekbar_textsize);
@@ -1156,7 +1158,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
 
                             title.setText(korean_sheet.getCell(0, index).getContents());
-                            content.setText(korean_sheet.getCell(1,index).getContents());
+                            content.setText(korean_sheet.getCell(1, index).getContents());
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
@@ -1832,10 +1834,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         }
                         mid_index = i;
                         listView.setVisibility(View.GONE);
-                        mid_Content.setVisibility(View.VISIBLE);
                         innerContent.setVisibility(View.GONE);
+                        loadingMenu.setVisibility(View.VISIBLE);
                         getString_mid_ListView(outer_str);
                         mid_Content.setAdapter(sideMidMenuAdapter);
+
+
                         outer_btn.setVisibility(View.VISIBLE);
                         if (isMidSheet) {
                             mid_Content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1961,6 +1965,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             drawerLayout = findViewById(R.id.drawer_layout);
             drawerView = findViewById(R.id.drawer);
         }
+
         public void run() {
             ImageButton btn_open = findViewById(R.id.btn_open); //상단바만들고 ImageButton으로 바꿔도 됨
             btn_open.setOnClickListener(new View.OnClickListener() {
@@ -2068,1340 +2073,1354 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     /*------------------------------------------------------------------------------------------------------- onStart() */
-    public void getString_mid_ListView(String titleName) {
+    public void getString_mid_ListView(final String titleName) {
         sideMidMenuAdapter.clearItem();
-        if (!isKorean) {
-            switch (titleName) {
-                case "Genesis":
-                    for (int i = 1; i <= 50; ++i) {
-                        sheetNumList.GetGenesisVerse("Genesis " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Genesis " + i)) {
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Genesis " + i);
-                        } else {
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Genesis " + i);
-                        }
-                    }
-                    break;
-                case "Exodus":
-                    for (int i = 1; i <= 40; ++i) {
-                        sheetNumList.GetExodusVerse("Exodus " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Exodus " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Exodus " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Exodus " + i);
-                    }
-                    break;
-                case "Leviticus":
-                    for (int i = 1; i <= 27; ++i) {
-                        sheetNumList.GetLeviticusVerse("Leviticus " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Leviticus " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Leviticus " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Leviticus " + i);
-                    }
-                    break;
-                case "Numbers":
-                    for (int i = 1; i <= 36; ++i) {
-                        sheetNumList.GetNumbersVerse("Numbers " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Numbers " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Numbers " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Numbers " + i);
-                    }
-                    break;
-                case "Deuteronomy":
-                    for (int i = 1; i <= 34; ++i) {
-                        sheetNumList.GetDeuteronomyVerse("Deuteronomy " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Deuteronomy " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Deuteronomy " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Deuteronomy " + i);
-                    }
-                    break;
-                case "Joshua":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetJoshuaVerse("Joshua " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Joshua " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Joshua " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Joshua " + i);
-                    }
-                    break;
-                case "Judges":
-                    for (int i = 1; i <= 21; ++i) {
-                        sheetNumList.GetJudgesVerse("Judges " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Judges " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Judges " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Judges " + i);
-                    }
-                    break;
-                case "Ruth":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetRuthVerse("Ruth " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Ruth " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ruth " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ruth " + i);
-                    }
-                    break;
-                case "1 Samuel":
-                    for (int i = 1; i <= 31; ++i) {
-                        sheetNumList.GetSamuel1Verse("1 Samuel " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Samuel " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Samuel " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Samuel " + i);
-                    }
-                    break;
-                case "2 Samuel":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetSamuel2Verse("2 Samuel " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Samuel " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Samuel " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Samuel " + i);
-                    }
-                    break;
-                case "1 Kings":
-                    for (int i = 1; i <= 22; ++i) {
-                        sheetNumList.GetKing1Verse("1 Kings " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Kings " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Kings " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Kings " + i);
-                    }
-                    break;
-                case "2 Kings":
-                    for (int i = 1; i <= 25; ++i) {
-                        sheetNumList.GetKing2Verse("2 Kings " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Kings " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Kings " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Kings " + i);
-                    }
-                    break;
-                case "1 Chronicles":
-                    for (int i = 1; i <= 29; ++i) {
-                        sheetNumList.GetChronicles1Verse("1 Chronicles " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Chronicles " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Chronicles " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Chronicles " + i);
-                    }
-                    break;
-                case "2 Chronicles":
-                    for (int i = 1; i <= 36; ++i) {
-                        sheetNumList.GetChronicles2Verse("2 Chronicles " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Chronicles " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Chronicles " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Chronicles " + i);
-                    }
-                    break;
-                case "Ezra":
-                    for (int i = 1; i <= 10; ++i) {
-                        sheetNumList.GetEzraVerse("Ezra " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Ezra " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ezra " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ezra " + i);
-                    }
-                    break;
-                case "Nehemiah":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetNehemiahVerse("Nehemiah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Nehemiah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Nehemiah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Nehemiah " + i);
-                    }
-                    break;
-                case "Esther":
-                    for (int i = 1; i <= 10; ++i) {
-                        sheetNumList.GetEstherVerse("Esther " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Esther " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Esther " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Esther " + i);
-                    }
-                    break;
-                case "Job":
-                    for (int i = 1; i <= 42; ++i) {
-                        sheetNumList.GetJobVerse("Job " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Job " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Job " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Job " + i);
-                    }
-                    break;
-                case "Psalms":
-                    for (int i = 1; i <= 150; ++i) {
-                        sheetNumList.GetPsalmsVerse("Psalms " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Psalms " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Psalms " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Psalms " + i);
-                    }
-                    break;
-                case "Proverbs":
-                    for (int i = 1; i <= 31; ++i) {
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Proverbs " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Proverbs " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Proverbs " + i);
-                    }
-                    break;
-                case "Ecclesiastes":
-                    for (int i = 1; i <= 12; ++i) {
-                        sheetNumList.GetEcclesiastesVerse("Ecclesiastes " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Ecclesiastes " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ecclesiastes " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ecclesiastes " + i);
-                    }
-                    break;
-                case "Song of Solomon":
-                    for (int i = 1; i <= 8; ++i) {
-                        sheetNumList.GetSolomonVerse("Song of Solomon " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Song of Solomon " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Song of Solomon " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Song of Solomon " + i);
-                    }
-                    break;
-                case "Isaiah":
-                    for (int i = 1; i <= 66; ++i) {
-                        sheetNumList.GetIsaiahVerse("Isaiah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Isaiah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Isaiah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Isaiah " + i);
-                    }
-                    break;
-                case "Jeremiah":
-                    for (int i = 1; i <= 52; ++i) {
-                        sheetNumList.GetJeremiahVerse("Jeremiah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Jeremiah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jeremiah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jeremiah " + i);
-                    }
-                    break;
-                case "Lamentations":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetLamentationsVerse("Lamentations " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Lamentations " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Lamentations " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Lamentations " + i);
-                    }
-                    break;
-                case "Ezekiel":
-                    for (int i = 1; i <= 48; ++i) {
-                        sheetNumList.GetEzekielVerse("Ezekiel " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Ezekiel " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ezekiel " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ezekiel " + i);
-                    }
-                    break;
-                case "Daniel":
-                    for (int i = 1; i <= 12; ++i) {
-                        sheetNumList.GetDanielVerse("Daniel " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Daniel " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Daniel " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Daniel " + i);
-                    }
-                    break;
-                case "Hosea":
-                    for (int i = 1; i <= 14; ++i) {
-                        sheetNumList.GetHoseaVerse("Hosea " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Hosea " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Hosea " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Hosea " + i);
-                    }
-                    break;
-                case "Joel":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetJoelVerse("Joel " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Joel " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Joel " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Joel " + i);
-                    }
-                    break;
-                case "Amos":
-                    for (int i = 1; i <= 9; ++i) {
-                        sheetNumList.GetAmosVerse("Amos " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Amos " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Amos " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Amos " + i);
-                    }
-                    break;
-                case "Obadiah":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetObadiahVerse("Obadiah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Obadiah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Obadiah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Obadiah " + i);
-                    }
-                    break;
-                case "Jonah":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetObadiahVerse("Jonah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Jonah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jonah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jonah " + i);
-                    }
-                    break;
-                case "Micah":
-                    for (int i = 1; i <= 7; ++i) {
-                        sheetNumList.GetMicahVerse("Micah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Micah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Micah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Micah " + i);
-                    }
-                    break;
-                case "Nahum":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetNahumVerse("Nahum " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Nahum " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Nahum " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Nahum " + i);
-                    }
-                    break;
-                case "Habakkuk":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetHabakkukVerse("Habakkuk " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Habakkuk " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Habakkuk " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Habakkuk " + i);
-                    }
-                    break;
-                case "Zephaniah":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetZephaniahVerse("Zephaniah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Zephaniah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Zephaniah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Zephaniah " + i);
-                    }
-                    break;
-                case "Haggai":
-                    for (int i = 1; i <= 2; ++i) {
-                        sheetNumList.GetHaggaiVerse("Haggai " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Haggai " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Haggai " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Haggai " + i);
-                    }
-                    break;
-                case "Zechariah":
-                    for (int i = 1; i <= 14; ++i) {
-                        sheetNumList.GetZechariahVerse("Zechariah " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Zechariah " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Zechariah " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Zechariah " + i);
-                    }
-                    break;
-                case "Malachi":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetMalachiVerse("Malachi " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Malachi " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Malachi " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Malachi " + i);
-                    }
-                    break;
-                case "Matthew":
-                    for (int i = 1; i <= 28; ++i) {
-                        sheetNumList.GetMatthewVerse("Matthew " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Matthew " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Matthew " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Matthew " + i);
-                    }
-                    break;
-                case "Mark":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetMarkVerse("Mark " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Mark " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Mark " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Mark " + i);
-                    }
-                    break;
-                case "Luke":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetLukeVerse("Luke " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Luke " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Luke " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Luke " + i);
-                    }
-                    break;
-                case "John":
-                    for (int i = 1; i <= 21; ++i) {
-                        sheetNumList.GetJohnVerse("John " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("John " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "John " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "John " + i);
-                    }
-                    break;
-                case "Acts":
-                    for (int i = 1; i <= 28; ++i) {
-                        sheetNumList.GetActsVerse("Acts " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Acts " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Acts " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Acts " + i);
-                    }
-                    break;
-                case "Romans":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetRomansVerse("Romans " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Romans " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Romans " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Romans " + i);
-                    }
-                    break;
-                case "1 Corinthians":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetCorinthians1Verse("1 Corinthians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Corinthians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Corinthians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Corinthians " + i);
-                    }
-                    break;
-                case "2 Corinthians":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetCorinthians2Verse("2 Corinthians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Corinthians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Corinthians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Corinthians " + i);
-                    }
-                    break;
-                case "Galatians":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetGalatiansVerse("Galatians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Galatians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Galatians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Galatians " + i);
-                    }
-                    break;
-                case "Ephesians":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetEphesiansVerse("Ephesians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Ephesians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ephesians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ephesians " + i);
-                    }
-                    break;
-                case "Philippians":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetPhilippiansVerse("Philippians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Philippians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Philippians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Philippians " + i);
-                    }
-                    break;
-                case "Colossians":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetColossiansVerse("Colossians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Colossians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Colossians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Colossians " + i);
-                    }
-                    break;
-                case "1 Thessalonians":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetThessalonians1Verse("1 Thessalonians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Thessalonians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Thessalonians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Thessalonians " + i);
-                    }
-                    break;
-                case "2 Thessalonians":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetThessalonians2Verse("2 Thessalonians " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Thessalonians " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Thessalonians " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Thessalonians " + i);
-                    }
-                    break;
-                case "1 Timothy":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetTimothy1Verse("1 Timothy " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Timothy " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Timothy " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Timothy " + i);
-                    }
-                    break;
-                case "2 Timothy":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetTimothy2Verse("2 Timothy " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Timothy " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Timothy " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Timothy " + i);
-                    }
-                    break;
-                case "Titus":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetTitusVerse("Titus " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Titus " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Titus " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Titus " + i);
-                    }
-                    break;
-                case "Philemon":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetPhilemonVerse("Philemon " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Philemon " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Philemon " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Philemon " + i);
-                    }
-                    break;
-                case "Hebrews":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetHebrewsVerse("Hebrews " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Hebrews " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Hebrews " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Hebrews " + i);
-                    }
-                    break;
-                case "James":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetJamesVerse("James " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("James " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "James " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "James " + i);
-                    }
-                    break;
-                case "1 Peter":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetPeter1Verse("1 Peter " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("1 Peter " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Peter " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Peter " + i);
-                    }
-                    break;
-                case "2 Peter":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetPeter2Verse("2 Peter " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 Peter " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Peter " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Peter " + i);
-                    }
-                    break;
-                case "1 John":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetJohn1Verse("1 John " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Genesis " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Genesis " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Genesis " + i);
-                    }
-                    break;
-                case "2 John":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJohn2Verse("2 John " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("2 John " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 John " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 John " + i);
-                    }
-                    break;
-                case "3 John":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJohn3Verse("3 John " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("3 John " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "3 John " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "3 John " + i);
-                    }
-                    break;
-                case "Jude":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJudeVerse("Jude " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Jude " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jude " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jude " + i);
-                    }
-                    break;
-                case "Revelation":
-                    for (int i = 1; i <= 22; ++i) {
-                        sheetNumList.GetRevelationVerse("Revelation " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("Revelation " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Revelation " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Revelation " + i);
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + title);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!isKorean) {
+                    switch (titleName) {
+                        case "Genesis":
+                            for (int i = 1; i <= 50; ++i) {
+                                sheetNumList.GetGenesisVerse("Genesis " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Genesis " + i)) {
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Genesis " + i);
+                                } else {
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Genesis " + i);
+                                }
+                            }
+                            break;
+                        case "Exodus":
+                            for (int i = 1; i <= 40; ++i) {
+                                sheetNumList.GetExodusVerse("Exodus " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Exodus " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Exodus " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Exodus " + i);
+                            }
+                            break;
+                        case "Leviticus":
+                            for (int i = 1; i <= 27; ++i) {
+                                sheetNumList.GetLeviticusVerse("Leviticus " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Leviticus " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Leviticus " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Leviticus " + i);
+                            }
+                            break;
+                        case "Numbers":
+                            for (int i = 1; i <= 36; ++i) {
+                                sheetNumList.GetNumbersVerse("Numbers " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Numbers " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Numbers " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Numbers " + i);
+                            }
+                            break;
+                        case "Deuteronomy":
+                            for (int i = 1; i <= 34; ++i) {
+                                sheetNumList.GetDeuteronomyVerse("Deuteronomy " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Deuteronomy " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Deuteronomy " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Deuteronomy " + i);
+                            }
+                            break;
+                        case "Joshua":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetJoshuaVerse("Joshua " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Joshua " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Joshua " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Joshua " + i);
+                            }
+                            break;
+                        case "Judges":
+                            for (int i = 1; i <= 21; ++i) {
+                                sheetNumList.GetJudgesVerse("Judges " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Judges " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Judges " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Judges " + i);
+                            }
+                            break;
+                        case "Ruth":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetRuthVerse("Ruth " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Ruth " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ruth " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ruth " + i);
+                            }
+                            break;
+                        case "1 Samuel":
+                            for (int i = 1; i <= 31; ++i) {
+                                sheetNumList.GetSamuel1Verse("1 Samuel " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Samuel " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Samuel " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Samuel " + i);
+                            }
+                            break;
+                        case "2 Samuel":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetSamuel2Verse("2 Samuel " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Samuel " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Samuel " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Samuel " + i);
+                            }
+                            break;
+                        case "1 Kings":
+                            for (int i = 1; i <= 22; ++i) {
+                                sheetNumList.GetKing1Verse("1 Kings " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Kings " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Kings " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Kings " + i);
+                            }
+                            break;
+                        case "2 Kings":
+                            for (int i = 1; i <= 25; ++i) {
+                                sheetNumList.GetKing2Verse("2 Kings " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Kings " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Kings " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Kings " + i);
+                            }
+                            break;
+                        case "1 Chronicles":
+                            for (int i = 1; i <= 29; ++i) {
+                                sheetNumList.GetChronicles1Verse("1 Chronicles " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Chronicles " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Chronicles " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Chronicles " + i);
+                            }
+                            break;
+                        case "2 Chronicles":
+                            for (int i = 1; i <= 36; ++i) {
+                                sheetNumList.GetChronicles2Verse("2 Chronicles " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Chronicles " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Chronicles " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Chronicles " + i);
+                            }
+                            break;
+                        case "Ezra":
+                            for (int i = 1; i <= 10; ++i) {
+                                sheetNumList.GetEzraVerse("Ezra " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Ezra " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ezra " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ezra " + i);
+                            }
+                            break;
+                        case "Nehemiah":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetNehemiahVerse("Nehemiah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Nehemiah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Nehemiah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Nehemiah " + i);
+                            }
+                            break;
+                        case "Esther":
+                            for (int i = 1; i <= 10; ++i) {
+                                sheetNumList.GetEstherVerse("Esther " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Esther " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Esther " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Esther " + i);
+                            }
+                            break;
+                        case "Job":
+                            for (int i = 1; i <= 42; ++i) {
+                                sheetNumList.GetJobVerse("Job " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Job " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Job " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Job " + i);
+                            }
+                            break;
+                        case "Psalms":
+                            for (int i = 1; i <= 150; ++i) {
+                                sheetNumList.GetPsalmsVerse("Psalms " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Psalms " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Psalms " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Psalms " + i);
+                            }
+                            break;
+                        case "Proverbs":
+                            for (int i = 1; i <= 31; ++i) {
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Proverbs " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Proverbs " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Proverbs " + i);
+                            }
+                            break;
+                        case "Ecclesiastes":
+                            for (int i = 1; i <= 12; ++i) {
+                                sheetNumList.GetEcclesiastesVerse("Ecclesiastes " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Ecclesiastes " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ecclesiastes " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ecclesiastes " + i);
+                            }
+                            break;
+                        case "Song of Solomon":
+                            for (int i = 1; i <= 8; ++i) {
+                                sheetNumList.GetSolomonVerse("Song of Solomon " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Song of Solomon " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Song of Solomon " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Song of Solomon " + i);
+                            }
+                            break;
+                        case "Isaiah":
+                            for (int i = 1; i <= 66; ++i) {
+                                sheetNumList.GetIsaiahVerse("Isaiah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Isaiah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Isaiah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Isaiah " + i);
+                            }
+                            break;
+                        case "Jeremiah":
+                            for (int i = 1; i <= 52; ++i) {
+                                sheetNumList.GetJeremiahVerse("Jeremiah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Jeremiah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jeremiah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jeremiah " + i);
+                            }
+                            break;
+                        case "Lamentations":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetLamentationsVerse("Lamentations " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Lamentations " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Lamentations " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Lamentations " + i);
+                            }
+                            break;
+                        case "Ezekiel":
+                            for (int i = 1; i <= 48; ++i) {
+                                sheetNumList.GetEzekielVerse("Ezekiel " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Ezekiel " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ezekiel " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ezekiel " + i);
+                            }
+                            break;
+                        case "Daniel":
+                            for (int i = 1; i <= 12; ++i) {
+                                sheetNumList.GetDanielVerse("Daniel " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Daniel " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Daniel " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Daniel " + i);
+                            }
+                            break;
+                        case "Hosea":
+                            for (int i = 1; i <= 14; ++i) {
+                                sheetNumList.GetHoseaVerse("Hosea " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Hosea " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Hosea " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Hosea " + i);
+                            }
+                            break;
+                        case "Joel":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetJoelVerse("Joel " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Joel " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Joel " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Joel " + i);
+                            }
+                            break;
+                        case "Amos":
+                            for (int i = 1; i <= 9; ++i) {
+                                sheetNumList.GetAmosVerse("Amos " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Amos " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Amos " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Amos " + i);
+                            }
+                            break;
+                        case "Obadiah":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetObadiahVerse("Obadiah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Obadiah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Obadiah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Obadiah " + i);
+                            }
+                            break;
+                        case "Jonah":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetObadiahVerse("Jonah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Jonah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jonah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jonah " + i);
+                            }
+                            break;
+                        case "Micah":
+                            for (int i = 1; i <= 7; ++i) {
+                                sheetNumList.GetMicahVerse("Micah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Micah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Micah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Micah " + i);
+                            }
+                            break;
+                        case "Nahum":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetNahumVerse("Nahum " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Nahum " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Nahum " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Nahum " + i);
+                            }
+                            break;
+                        case "Habakkuk":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetHabakkukVerse("Habakkuk " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Habakkuk " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Habakkuk " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Habakkuk " + i);
+                            }
+                            break;
+                        case "Zephaniah":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetZephaniahVerse("Zephaniah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Zephaniah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Zephaniah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Zephaniah " + i);
+                            }
+                            break;
+                        case "Haggai":
+                            for (int i = 1; i <= 2; ++i) {
+                                sheetNumList.GetHaggaiVerse("Haggai " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Haggai " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Haggai " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Haggai " + i);
+                            }
+                            break;
+                        case "Zechariah":
+                            for (int i = 1; i <= 14; ++i) {
+                                sheetNumList.GetZechariahVerse("Zechariah " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Zechariah " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Zechariah " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Zechariah " + i);
+                            }
+                            break;
+                        case "Malachi":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetMalachiVerse("Malachi " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Malachi " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Malachi " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Malachi " + i);
+                            }
+                            break;
+                        case "Matthew":
+                            for (int i = 1; i <= 28; ++i) {
+                                sheetNumList.GetMatthewVerse("Matthew " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Matthew " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Matthew " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Matthew " + i);
+                            }
+                            break;
+                        case "Mark":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetMarkVerse("Mark " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Mark " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Mark " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Mark " + i);
+                            }
+                            break;
+                        case "Luke":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetLukeVerse("Luke " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Luke " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Luke " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Luke " + i);
+                            }
+                            break;
+                        case "John":
+                            for (int i = 1; i <= 21; ++i) {
+                                sheetNumList.GetJohnVerse("John " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("John " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "John " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "John " + i);
+                            }
+                            break;
+                        case "Acts":
+                            for (int i = 1; i <= 28; ++i) {
+                                sheetNumList.GetActsVerse("Acts " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Acts " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Acts " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Acts " + i);
+                            }
+                            break;
+                        case "Romans":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetRomansVerse("Romans " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Romans " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Romans " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Romans " + i);
+                            }
+                            break;
+                        case "1 Corinthians":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetCorinthians1Verse("1 Corinthians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Corinthians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Corinthians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Corinthians " + i);
+                            }
+                            break;
+                        case "2 Corinthians":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetCorinthians2Verse("2 Corinthians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Corinthians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Corinthians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Corinthians " + i);
+                            }
+                            break;
+                        case "Galatians":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetGalatiansVerse("Galatians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Galatians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Galatians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Galatians " + i);
+                            }
+                            break;
+                        case "Ephesians":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetEphesiansVerse("Ephesians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Ephesians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Ephesians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Ephesians " + i);
+                            }
+                            break;
+                        case "Philippians":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetPhilippiansVerse("Philippians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Philippians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Philippians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Philippians " + i);
+                            }
+                            break;
+                        case "Colossians":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetColossiansVerse("Colossians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Colossians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Colossians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Colossians " + i);
+                            }
+                            break;
+                        case "1 Thessalonians":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetThessalonians1Verse("1 Thessalonians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Thessalonians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Thessalonians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Thessalonians " + i);
+                            }
+                            break;
+                        case "2 Thessalonians":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetThessalonians2Verse("2 Thessalonians " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Thessalonians " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Thessalonians " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Thessalonians " + i);
+                            }
+                            break;
+                        case "1 Timothy":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetTimothy1Verse("1 Timothy " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Timothy " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Timothy " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Timothy " + i);
+                            }
+                            break;
+                        case "2 Timothy":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetTimothy2Verse("2 Timothy " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Timothy " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Timothy " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Timothy " + i);
+                            }
+                            break;
+                        case "Titus":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetTitusVerse("Titus " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Titus " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Titus " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Titus " + i);
+                            }
+                            break;
+                        case "Philemon":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetPhilemonVerse("Philemon " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Philemon " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Philemon " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Philemon " + i);
+                            }
+                            break;
+                        case "Hebrews":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetHebrewsVerse("Hebrews " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Hebrews " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Hebrews " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Hebrews " + i);
+                            }
+                            break;
+                        case "James":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetJamesVerse("James " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("James " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "James " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "James " + i);
+                            }
+                            break;
+                        case "1 Peter":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetPeter1Verse("1 Peter " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("1 Peter " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "1 Peter " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "1 Peter " + i);
+                            }
+                            break;
+                        case "2 Peter":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetPeter2Verse("2 Peter " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 Peter " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 Peter " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 Peter " + i);
+                            }
+                            break;
+                        case "1 John":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetJohn1Verse("1 John " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Genesis " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Genesis " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Genesis " + i);
+                            }
+                            break;
+                        case "2 John":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJohn2Verse("2 John " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("2 John " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "2 John " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "2 John " + i);
+                            }
+                            break;
+                        case "3 John":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJohn3Verse("3 John " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("3 John " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "3 John " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "3 John " + i);
+                            }
+                            break;
+                        case "Jude":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJudeVerse("Jude " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Jude " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Jude " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Jude " + i);
+                            }
+                            break;
+                        case "Revelation":
+                            for (int i = 1; i <= 22; ++i) {
+                                sheetNumList.GetRevelationVerse("Revelation " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("Revelation " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "Revelation " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "Revelation " + i);
+                            }
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + title);
+                    }
+                } else {
+                    switch (titleName) {
+                        case "창세기":
+                            for (int i = 1; i <= 50; ++i) {
+                                sheetNumList.GetGenesisVerse("창세기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("창세기 " + i)) {
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "창세기 " + i);
+                                } else {
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "창세기 " + i);
+                                }
+                            }
+                            break;
+                        case "출애굽기":
+                            for (int i = 1; i <= 40; ++i) {
+                                sheetNumList.GetExodusVerse("출애굽기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("출애굽기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "출애굽기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "출애굽기 " + i);
+                            }
+                            break;
+                        case "레위기":
+                            for (int i = 1; i <= 27; ++i) {
+                                sheetNumList.GetLeviticusVerse("레위기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("레위기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "레위기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "레위기 " + i);
+                            }
+                            break;
+                        case "민수기":
+                            for (int i = 1; i <= 36; ++i) {
+                                sheetNumList.GetNumbersVerse("민수기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("민수기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "민수기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "민수기 " + i);
+                            }
+                            break;
+                        case "신명기":
+                            for (int i = 1; i <= 34; ++i) {
+                                sheetNumList.GetDeuteronomyVerse("신명기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("신명기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "신명기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "신명기 " + i);
+                            }
+                            break;
+                        case "여호수아":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetJoshuaVerse("여호수아 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("여호수아 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "여호수아 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "여호수아 " + i);
+                            }
+                            break;
+                        case "사사기":
+                            for (int i = 1; i <= 21; ++i) {
+                                sheetNumList.GetJudgesVerse("사사기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("사사기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사사기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사사기 " + i);
+                            }
+                            break;
+                        case "룻기":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetRuthVerse("룻기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("룻기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "룻기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "룻기 " + i);
+                            }
+                            break;
+                        case "사무엘상":
+                            for (int i = 1; i <= 31; ++i) {
+                                sheetNumList.GetSamuel1Verse("사무엘상 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("사무엘상 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사무엘상 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사무엘상 " + i);
+                            }
+                            break;
+                        case "사무엘하":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetSamuel2Verse("사무엘하 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("사무엘하 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사무엘하 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사무엘하 " + i);
+                            }
+                            break;
+                        case "열왕기상":
+                            for (int i = 1; i <= 22; ++i) {
+                                sheetNumList.GetKing1Verse("열왕기상 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("열왕기상 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "열왕기상 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "열왕기상 " + i);
+                            }
+                            break;
+                        case "열왕기하":
+                            for (int i = 1; i <= 25; ++i) {
+                                sheetNumList.GetKing2Verse("열왕기하 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("열왕기하 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "열왕기하 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "열왕기하 " + i);
+                            }
+                            break;
+                        case "역대상":
+                            for (int i = 1; i <= 29; ++i) {
+                                sheetNumList.GetChronicles1Verse("역대상 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("역대상 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "역대상 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "역대상 " + i);
+                            }
+                            break;
+                        case "역대하":
+                            for (int i = 1; i <= 36; ++i) {
+                                sheetNumList.GetChronicles2Verse("역대하 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("역대하 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "역대하 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "역대하 " + i);
+                            }
+                            break;
+                        case "에스라":
+                            for (int i = 1; i <= 10; ++i) {
+                                sheetNumList.GetEzraVerse("에스라 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("에스라 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스라 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스라 " + i);
+                            }
+                            break;
+                        case "느헤미야":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetNehemiahVerse("느헤미야 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("느헤미야 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "느헤미야 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "느헤미야 " + i);
+                            }
+                            break;
+                        case "에스더":
+                            for (int i = 1; i <= 10; ++i) {
+                                sheetNumList.GetEstherVerse("에스더 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("에스더 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스더 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스더 " + i);
+                            }
+                            break;
+                        case "욥기":
+                            for (int i = 1; i <= 42; ++i) {
+                                sheetNumList.GetJobVerse("욥기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("욥기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "욥기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "욥기 " + i);
+                            }
+                            break;
+                        case "시편":
+                            for (int i = 1; i <= 150; ++i) {
+                                sheetNumList.GetPsalmsVerse("시편 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("시편 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "시편 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "시편 " + i);
+                            }
+                            break;
+                        case "잠언":
+                            for (int i = 1; i <= 31; ++i) {
+                                sheetNumList.GetProverbsVerse("잠언 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("잠언 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "잠언 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "잠언 " + i);
+                            }
+                            break;
+                        case "전도서":
+                            for (int i = 1; i <= 12; ++i) {
+                                sheetNumList.GetEcclesiastesVerse("전도서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("전도서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "전도서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "전도서 " + i);
+                            }
+                            break;
+                        case "아가":
+                            for (int i = 1; i <= 8; ++i) {
+                                sheetNumList.GetSolomonVerse("아가 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("아가 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "아가 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "아가 " + i);
+                            }
+                            break;
+                        case "이사야":
+                            for (int i = 1; i <= 66; ++i) {
+                                sheetNumList.GetIsaiahVerse("이사야 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("이사야 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "이사야 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "이사야 " + i);
+                            }
+                            break;
+                        case "예레미야":
+                            for (int i = 1; i <= 52; ++i) {
+                                sheetNumList.GetJeremiahVerse("예레미야 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("예레미야 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "예레미야 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "예레미야 " + i);
+                            }
+                            break;
+                        case "예레미야애가":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetLamentationsVerse("예레미야애가 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("예레미야애가 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "예레미야애가 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "예레미야애가 " + i);
+                            }
+                            break;
+                        case "에스겔":
+                            for (int i = 1; i <= 48; ++i) {
+                                sheetNumList.GetEzekielVerse("에스겔 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("에스겔 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스겔 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스겔 " + i);
+                            }
+                            break;
+                        case "다니엘":
+                            for (int i = 1; i <= 12; ++i) {
+                                sheetNumList.GetDanielVerse("다니엘 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("다니엘 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "다니엘 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "다니엘 " + i);
+                            }
+                            break;
+                        case "호세아":
+                            for (int i = 1; i <= 14; ++i) {
+                                sheetNumList.GetHoseaVerse("호세아 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("호세아 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "호세아 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "호세아 " + i);
+                            }
+                            break;
+                        case "요엘":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetJoelVerse("요엘 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요엘 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요엘 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요엘 " + i);
+                            }
+                            break;
+                        case "아모스":
+                            for (int i = 1; i <= 9; ++i) {
+                                sheetNumList.GetAmosVerse("아모스 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("아모스 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "아모스 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "아모스 " + i);
+                            }
+                            break;
+                        case "오바댜":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetObadiahVerse("오바댜 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("오바댜 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "오바댜 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "오바댜 " + i);
+                            }
+                            break;
+                        case "요나":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetJonahVerse("요나 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요나 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요나 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요나 " + i);
+                            }
+                            break;
+                        case "미가":
+                            for (int i = 1; i <= 7; ++i) {
+                                sheetNumList.GetMicahVerse("미가 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("미가 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "미가 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "미가 " + i);
+                            }
+                            break;
+                        case "나훔":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetNahumVerse("나훔 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("나훔 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "나훔 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "나훔 " + i);
+                            }
+                            break;
+                        case "하박국":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetHabakkukVerse("하박국 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("하박국 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "하박국 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "하박국 " + i);
+                            }
+                            break;
+                        case "스바냐":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetZephaniahVerse("스바냐 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("스바냐 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "스바냐 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "스바냐 " + i);
+                            }
+                            break;
+                        case "학개":
+                            for (int i = 1; i <= 2; ++i) {
+                                sheetNumList.GetHaggaiVerse("학개 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("학개 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "학개 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "학개 " + i);
+                            }
+                            break;
+                        case "스가랴":
+                            for (int i = 1; i <= 14; ++i) {
+                                sheetNumList.GetZechariahVerse("스가랴 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("스가랴 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "스가랴 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "스가랴 " + i);
+                            }
+                            break;
+                        case "말라기":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetMalachiVerse("말라기 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("말라기 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "말라기 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "말라기 " + i);
+                            }
+                            break;
+                        case "마태복음":
+                            for (int i = 1; i <= 28; ++i) {
+                                sheetNumList.GetMatthewVerse("마태복음 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("마태복음 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "마태복음 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "마태복음 " + i);
+                            }
+                            break;
+                        case "마가복음":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetMarkVerse("마가복음 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("마가복음 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "마가복음 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "마가복음 " + i);
+                            }
+                            break;
+                        case "누가복음":
+                            for (int i = 1; i <= 24; ++i) {
+                                sheetNumList.GetLukeVerse("누가복음 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("누가복음 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "누가복음 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "누가복음 " + i);
+                            }
+                            break;
+                        case "요한복음":
+                            for (int i = 1; i <= 21; ++i) {
+                                sheetNumList.GetJohnVerse("요한복음 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요한복음 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한복음 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한복음 " + i);
+                            }
+                            break;
+                        case "사도행전":
+                            for (int i = 1; i <= 28; ++i) {
+                                sheetNumList.GetActsVerse("사도행전 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("사도행전 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사도행전 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사도행전 " + i);
+                            }
+                            break;
+                        case "로마서":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetRomansVerse("로마서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("로마서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "로마서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "로마서 " + i);
+                            }
+                            break;
+                        case "고린도전서":
+                            for (int i = 1; i <= 16; ++i) {
+                                sheetNumList.GetCorinthians1Verse("고린도전서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("고린도전서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "고린도전서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "고린도전서 " + i);
+                            }
+                            break;
+                        case "고린도후서":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetChronicles2Verse("고린도후서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("고린도후서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "고린도후서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "고린도후서 " + i);
+                            }
+                            break;
+                        case "갈라디아서":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetGalatiansVerse("갈라디아서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("갈라디아서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "갈라디아서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "갈라디아서 " + i);
+                            }
+                            break;
+                        case "에베소서":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetEphesiansVerse("에베소서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("에베소서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에베소서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에베소서 " + i);
+                            }
+                            break;
+                        case "빌립보서":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetPhilippiansVerse("빌립보서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("빌립보서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "빌립보서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "빌립보서 " + i);
+                            }
+                            break;
+                        case "골로새서":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetColossiansVerse("골로새서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("골로새서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "골로새서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "골로새서 " + i);
+                            }
+                            break;
+                        case "데살로니가전서":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetThessalonians1Verse("데살로니가전서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("데살로니가전서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "데살로니가전서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "데살로니가전서 " + i);
+                            }
+                            break;
+                        case "데살로니가후서":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetThessalonians2Verse("데살로니가후서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("데살로니가후서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "데살로니가후서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "데살로니가후서 " + i);
+                            }
+                            break;
+                        case "디모데전서":
+                            for (int i = 1; i <= 6; ++i) {
+                                sheetNumList.GetTimothy1Verse("디모데전서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("디모데전서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디모데전서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디모데전서 " + i);
+                            }
+                            break;
+                        case "디모데후서":
+                            for (int i = 1; i <= 4; ++i) {
+                                sheetNumList.GetTimothy2Verse("디모데전서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("디모데후서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디모데후서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디모데후서 " + i);
+                            }
+                            break;
+                        case "디도서":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetTitusVerse("디도서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("디도서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디도서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디도서 " + i);
+                            }
+                            break;
+                        case "빌레몬서":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetPhilemonVerse("빌레몬서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("빌레몬서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "빌레몬서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "빌레몬서 " + i);
+                            }
+                            break;
+                        case "히브리서":
+                            for (int i = 1; i <= 13; ++i) {
+                                sheetNumList.GetHebrewsVerse("히브리서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("히브리서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "히브리서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "히브리서 " + i);
+                            }
+                            break;
+                        case "야고보서":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetJamesVerse("야고보서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("야고보서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "야고보서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "야고보서 " + i);
+                            }
+                            break;
+                        case "베드로전서":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetPeter1Verse("베드로전서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("베드로전서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "베드로전서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "베드로전서 " + i);
+                            }
+                            break;
+                        case "베드로후서":
+                            for (int i = 1; i <= 3; ++i) {
+                                sheetNumList.GetPeter2Verse("베드로후서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("베드로후서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "베드로후서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "베드로후서 " + i);
+                            }
+                            break;
+                        case "요한일서":
+                            for (int i = 1; i <= 5; ++i) {
+                                sheetNumList.GetJohn1Verse("요한일서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요한일서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한일서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한일서 " + i);
+                            }
+                            break;
+                        case "요한이서":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJohn2Verse("요한이서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요한이서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한이서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한이서 " + i);
+                            }
+                            break;
+                        case "요한삼서":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJohn3Verse("요한삼서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요한삼서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한삼서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한삼서 " + i);
+                            }
+                            break;
+                        case "유다서":
+                            for (int i = 1; i <= 1; ++i) {
+                                sheetNumList.GetJudeVerse("유다서 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("유다서 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "유다서 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "유다서 " + i);
+                            }
+                            break;
+                        case "요한계시록":
+                            for (int i = 1; i <= 22; ++i) {
+                                sheetNumList.GetRevelationVerse("요한계시록 " + i);
+                                estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
+                                if (isAllRead("요한계시록 " + i))
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한계시록 " + i);
+                                else
+                                    sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한계시록 " + i);
+                            }
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + title);
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingMenu.setVisibility(View.GONE);
+                        mid_Content.setVisibility(View.VISIBLE);
+                    }
+                });
+
             }
-        } else {
-            switch (titleName) {
-                case "창세기":
-                    for (int i = 1; i <= 50; ++i) {
-                        sheetNumList.GetGenesisVerse("창세기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("창세기 " + i)) {
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "창세기 " + i);
-                        } else {
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "창세기 " + i);
-                        }
-                    }
-                    break;
-                case "출애굽기":
-                    for (int i = 1; i <= 40; ++i) {
-                        sheetNumList.GetExodusVerse("출애굽기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("출애굽기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "출애굽기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "출애굽기 " + i);
-                    }
-                    break;
-                case "레위기":
-                    for (int i = 1; i <= 27; ++i) {
-                        sheetNumList.GetLeviticusVerse("레위기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("레위기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "레위기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "레위기 " + i);
-                    }
-                    break;
-                case "민수기":
-                    for (int i = 1; i <= 36; ++i) {
-                        sheetNumList.GetNumbersVerse("민수기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("민수기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "민수기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "민수기 " + i);
-                    }
-                    break;
-                case "신명기":
-                    for (int i = 1; i <= 34; ++i) {
-                        sheetNumList.GetDeuteronomyVerse("신명기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("신명기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "신명기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "신명기 " + i);
-                    }
-                    break;
-                case "여호수아":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetJoshuaVerse("여호수아 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("여호수아 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "여호수아 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "여호수아 " + i);
-                    }
-                    break;
-                case "사사기":
-                    for (int i = 1; i <= 21; ++i) {
-                        sheetNumList.GetJudgesVerse("사사기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("사사기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사사기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사사기 " + i);
-                    }
-                    break;
-                case "룻기":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetRuthVerse("룻기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("룻기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "룻기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "룻기 " + i);
-                    }
-                    break;
-                case "사무엘상":
-                    for (int i = 1; i <= 31; ++i) {
-                        sheetNumList.GetSamuel1Verse("사무엘상 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("사무엘상 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사무엘상 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사무엘상 " + i);
-                    }
-                    break;
-                case "사무엘하":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetSamuel2Verse("사무엘하 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("사무엘하 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사무엘하 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사무엘하 " + i);
-                    }
-                    break;
-                case "열왕기상":
-                    for (int i = 1; i <= 22; ++i) {
-                        sheetNumList.GetKing1Verse("열왕기상 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("열왕기상 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "열왕기상 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "열왕기상 " + i);
-                    }
-                    break;
-                case "열왕기하":
-                    for (int i = 1; i <= 25; ++i) {
-                        sheetNumList.GetKing2Verse("열왕기하 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("열왕기하 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "열왕기하 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "열왕기하 " + i);
-                    }
-                    break;
-                case "역대상":
-                    for (int i = 1; i <= 29; ++i) {
-                        sheetNumList.GetChronicles1Verse("역대상 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("역대상 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "역대상 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "역대상 " + i);
-                    }
-                    break;
-                case "역대하":
-                    for (int i = 1; i <= 36; ++i) {
-                        sheetNumList.GetChronicles2Verse("역대하 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("역대하 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "역대하 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "역대하 " + i);
-                    }
-                    break;
-                case "에스라":
-                    for (int i = 1; i <= 10; ++i) {
-                        sheetNumList.GetEzraVerse("에스라 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("에스라 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스라 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스라 " + i);
-                    }
-                    break;
-                case "느헤미야":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetNehemiahVerse("느헤미야 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("느헤미야 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "느헤미야 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "느헤미야 " + i);
-                    }
-                    break;
-                case "에스더":
-                    for (int i = 1; i <= 10; ++i) {
-                        sheetNumList.GetEstherVerse("에스더 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("에스더 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스더 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스더 " + i);
-                    }
-                    break;
-                case "욥기":
-                    for (int i = 1; i <= 42; ++i) {
-                        sheetNumList.GetJobVerse("욥기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("욥기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "욥기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "욥기 " + i);
-                    }
-                    break;
-                case "시편":
-                    for (int i = 1; i <= 150; ++i) {
-                        sheetNumList.GetPsalmsVerse("시편 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("시편 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "시편 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "시편 " + i);
-                    }
-                    break;
-                case "잠언":
-                    for (int i = 1; i <= 31; ++i) {
-                        sheetNumList.GetProverbsVerse("잠언 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("잠언 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "잠언 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "잠언 " + i);
-                    }
-                    break;
-                case "전도서":
-                    for (int i = 1; i <= 12; ++i) {
-                        sheetNumList.GetEcclesiastesVerse("전도서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("전도서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "전도서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "전도서 " + i);
-                    }
-                    break;
-                case "아가":
-                    for (int i = 1; i <= 8; ++i) {
-                        sheetNumList.GetSolomonVerse("아가 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("아가 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "아가 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "아가 " + i);
-                    }
-                    break;
-                case "이사야":
-                    for (int i = 1; i <= 66; ++i) {
-                        sheetNumList.GetIsaiahVerse("이사야 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("이사야 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "이사야 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "이사야 " + i);
-                    }
-                    break;
-                case "예레미야":
-                    for (int i = 1; i <= 52; ++i) {
-                        sheetNumList.GetJeremiahVerse("예레미야 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("예레미야 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "예레미야 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "예레미야 " + i);
-                    }
-                    break;
-                case "예레미야애가":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetLamentationsVerse("예레미야애가 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("예레미야애가 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "예레미야애가 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "예레미야애가 " + i);
-                    }
-                    break;
-                case "에스겔":
-                    for (int i = 1; i <= 48; ++i) {
-                        sheetNumList.GetEzekielVerse("에스겔 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("에스겔 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에스겔 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에스겔 " + i);
-                    }
-                    break;
-                case "다니엘":
-                    for (int i = 1; i <= 12; ++i) {
-                        sheetNumList.GetDanielVerse("다니엘 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("다니엘 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "다니엘 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "다니엘 " + i);
-                    }
-                    break;
-                case "호세아":
-                    for (int i = 1; i <= 14; ++i) {
-                        sheetNumList.GetHoseaVerse("호세아 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("호세아 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "호세아 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "호세아 " + i);
-                    }
-                    break;
-                case "요엘":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetJoelVerse("요엘 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요엘 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요엘 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요엘 " + i);
-                    }
-                    break;
-                case "아모스":
-                    for (int i = 1; i <= 9; ++i) {
-                        sheetNumList.GetAmosVerse("아모스 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("아모스 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "아모스 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "아모스 " + i);
-                    }
-                    break;
-                case "오바댜":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetObadiahVerse("오바댜 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("오바댜 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "오바댜 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "오바댜 " + i);
-                    }
-                    break;
-                case "요나":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetJonahVerse("요나 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요나 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요나 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요나 " + i);
-                    }
-                    break;
-                case "미가":
-                    for (int i = 1; i <= 7; ++i) {
-                        sheetNumList.GetMicahVerse("미가 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("미가 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "미가 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "미가 " + i);
-                    }
-                    break;
-                case "나훔":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetNahumVerse("나훔 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("나훔 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "나훔 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "나훔 " + i);
-                    }
-                    break;
-                case "하박국":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetHabakkukVerse("하박국 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("하박국 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "하박국 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "하박국 " + i);
-                    }
-                    break;
-                case "스바냐":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetZephaniahVerse("스바냐 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("스바냐 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "스바냐 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "스바냐 " + i);
-                    }
-                    break;
-                case "학개":
-                    for (int i = 1; i <= 2; ++i) {
-                        sheetNumList.GetHaggaiVerse("학개 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("학개 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "학개 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "학개 " + i);
-                    }
-                    break;
-                case "스가랴":
-                    for (int i = 1; i <= 14; ++i) {
-                        sheetNumList.GetZechariahVerse("스가랴 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("스가랴 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "스가랴 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "스가랴 " + i);
-                    }
-                    break;
-                case "말라기":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetMalachiVerse("말라기 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("말라기 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "말라기 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "말라기 " + i);
-                    }
-                    break;
-                case "마태복음":
-                    for (int i = 1; i <= 28; ++i) {
-                        sheetNumList.GetMatthewVerse("마태복음 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("마태복음 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "마태복음 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "마태복음 " + i);
-                    }
-                    break;
-                case "마가복음":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetMarkVerse("마가복음 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("마가복음 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "마가복음 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "마가복음 " + i);
-                    }
-                    break;
-                case "누가복음":
-                    for (int i = 1; i <= 24; ++i) {
-                        sheetNumList.GetLukeVerse("누가복음 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("누가복음 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "누가복음 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "누가복음 " + i);
-                    }
-                    break;
-                case "요한복음":
-                    for (int i = 1; i <= 21; ++i) {
-                        sheetNumList.GetJohnVerse("요한복음 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요한복음 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한복음 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한복음 " + i);
-                    }
-                    break;
-                case "사도행전":
-                    for (int i = 1; i <= 28; ++i) {
-                        sheetNumList.GetActsVerse("사도행전 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("사도행전 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "사도행전 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "사도행전 " + i);
-                    }
-                    break;
-                case "로마서":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetRomansVerse("로마서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("로마서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "로마서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "로마서 " + i);
-                    }
-                    break;
-                case "고린도전서":
-                    for (int i = 1; i <= 16; ++i) {
-                        sheetNumList.GetCorinthians1Verse("고린도전서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("고린도전서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "고린도전서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "고린도전서 " + i);
-                    }
-                    break;
-                case "고린도후서":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetChronicles2Verse("고린도후서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("고린도후서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "고린도후서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "고린도후서 " + i);
-                    }
-                    break;
-                case "갈라디아서":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetGalatiansVerse("갈라디아서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("갈라디아서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "갈라디아서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "갈라디아서 " + i);
-                    }
-                    break;
-                case "에베소서":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetEphesiansVerse("에베소서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("에베소서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "에베소서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "에베소서 " + i);
-                    }
-                    break;
-                case "빌립보서":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetPhilippiansVerse("빌립보서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("빌립보서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "빌립보서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "빌립보서 " + i);
-                    }
-                    break;
-                case "골로새서":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetColossiansVerse("골로새서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("골로새서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "골로새서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "골로새서 " + i);
-                    }
-                    break;
-                case "데살로니가전서":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetThessalonians1Verse("데살로니가전서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("데살로니가전서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "데살로니가전서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "데살로니가전서 " + i);
-                    }
-                    break;
-                case "데살로니가후서":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetThessalonians2Verse("데살로니가후서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("데살로니가후서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "데살로니가후서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "데살로니가후서 " + i);
-                    }
-                    break;
-                case "디모데전서":
-                    for (int i = 1; i <= 6; ++i) {
-                        sheetNumList.GetTimothy1Verse("디모데전서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("디모데전서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디모데전서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디모데전서 " + i);
-                    }
-                    break;
-                case "디모데후서":
-                    for (int i = 1; i <= 4; ++i) {
-                        sheetNumList.GetTimothy2Verse("디모데전서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("디모데후서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디모데후서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디모데후서 " + i);
-                    }
-                    break;
-                case "디도서":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetTitusVerse("디도서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("디도서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "디도서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "디도서 " + i);
-                    }
-                    break;
-                case "빌레몬서":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetPhilemonVerse("빌레몬서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("빌레몬서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "빌레몬서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "빌레몬서 " + i);
-                    }
-                    break;
-                case "히브리서":
-                    for (int i = 1; i <= 13; ++i) {
-                        sheetNumList.GetHebrewsVerse("히브리서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("히브리서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "히브리서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "히브리서 " + i);
-                    }
-                    break;
-                case "야고보서":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetJamesVerse("야고보서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("야고보서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "야고보서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "야고보서 " + i);
-                    }
-                    break;
-                case "베드로전서":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetPeter1Verse("베드로전서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("베드로전서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "베드로전서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "베드로전서 " + i);
-                    }
-                    break;
-                case "베드로후서":
-                    for (int i = 1; i <= 3; ++i) {
-                        sheetNumList.GetPeter2Verse("베드로후서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("베드로후서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "베드로후서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "베드로후서 " + i);
-                    }
-                    break;
-                case "요한일서":
-                    for (int i = 1; i <= 5; ++i) {
-                        sheetNumList.GetJohn1Verse("요한일서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요한일서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한일서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한일서 " + i);
-                    }
-                    break;
-                case "요한이서":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJohn2Verse("요한이서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요한이서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한이서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한이서 " + i);
-                    }
-                    break;
-                case "요한삼서":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJohn3Verse("요한삼서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요한삼서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한삼서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한삼서 " + i);
-                    }
-                    break;
-                case "유다서":
-                    for (int i = 1; i <= 1; ++i) {
-                        sheetNumList.GetJudeVerse("유다서 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("유다서 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "유다서 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "유다서 " + i);
-                    }
-                    break;
-                case "요한계시록":
-                    for (int i = 1; i <= 22; ++i) {
-                        sheetNumList.GetRevelationVerse("요한계시록 " + i);
-                        estimateIsAll(sheetNumList.beginIdx, sheetNumList.endIdx);
-                        if (isAllRead("요한계시록 " + i))
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), "요한계시록 " + i);
-                        else
-                            sideMidMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), "요한계시록 " + i);
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + title);
-            }
-        }
+        }).start();
+
     }
 
     /*-------------------------------------------------------------------------------------------------getString_mid_ListView() */

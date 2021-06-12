@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class TodayVerseActivity extends AppCompatActivity {
     private String[] engList;
     private LinearLayout loadingScr;
     private LinearLayout mainScr;
+    private ImageButton back_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,13 @@ public class TodayVerseActivity extends AppCompatActivity {
         languageToggle = findViewById(R.id.language_toggle);
         loadingScr = findViewById(R.id.loading_scr);
         mainScr = findViewById(R.id.today_scr);
+        back_btn = findViewById(R.id.back_menu);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         getTodayVerseFromJson();
         languageToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
