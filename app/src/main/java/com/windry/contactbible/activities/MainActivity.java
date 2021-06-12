@@ -2018,6 +2018,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 isInnerSheet = false;
                 isMidSheet = true;
                 isOuterSheet = false;
+                loadingMenu.setVisibility(View.VISIBLE);
                 innerContent.setVisibility(View.GONE);
                 mid_Content.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.GONE);
