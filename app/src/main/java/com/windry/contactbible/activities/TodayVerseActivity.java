@@ -5,7 +5,11 @@ import jxl.Sheet;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.windry.contactbible.R;
 
@@ -27,17 +31,31 @@ public class TodayVerseActivity extends AppCompatActivity {
     private Sheet engSheet;
     private Bible[] bibleList;
     private TextView todayTitle;
+    private ListView todayList;
+    private ToggleButton languageToggle;
+    private ArrayAdapter<String> adapter;
+    private String[] korList;
+    private String[] engList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today_verse);
-        korSheet = ((MainActivity)MainActivity.context_main).korean_sheet;
-        engSheet = ((MainActivity)MainActivity.context_main).sheet;
+        korSheet = ((MainActivity) MainActivity.context_main).korean_sheet;
+        engSheet = ((MainActivity) MainActivity.context_main).sheet;
         todayTitle = findViewById(R.id.today_title);
+        todayList = findViewById(R.id.today_list);
+        languageToggle = findViewById(R.id.language_toggle);
+        languageToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
+            }
+        });
         getTodayVerseFromJson();
     }
 
-    public void getTodayVerseFromJson(){
+    public void getTodayVerseFromJson() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -77,21 +95,28 @@ public class TodayVerseActivity extends AppCompatActivity {
         }).start();
     }
 
-    public int findIndex(String str){
-        for(int i=1; i<=31102; ++i){
-            if(engSheet.getCell(0,i).getContents().equals(str)){
+    public void getVerseText() {
+        for (int i = 0; i < indexList.length; ++i) {
+            korList[i] = korSheet.getCell(1, indexList[i]).getContents();
+            engList[i] = engSheet.getCell(1, indexList[i]).getContents();
+        }
+    }
+
+    public int findIndex(String str) {
+        for (int i = 1; i <= 31102; ++i) {
+            if (engSheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
         }
         return 0;
     }
 
-    public void parseJson(String jsonString){
-        try{
+    public void parseJson(String jsonString) {
+        try {
             JSONArray jsonArray = new JSONArray(jsonString);
             indexList = new int[jsonArray.length()];
             bibleList = new Bible[jsonArray.length()];
-            for(int i=0; i< jsonArray.length(); ++i){
+            for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String book = jsonObject.optString("bookname");
                 String chapter = jsonObject.optString("chapter");
@@ -99,27 +124,69 @@ public class TodayVerseActivity extends AppCompatActivity {
                 bibleList[i] = new Bible(book, chapter, verse);
 
                 indexList[i] = findIndex(bibleList[i].createFormatted());
+                bibleList[i].korBook = korSheet.getCell(0, indexList[i]).getContents().split(" ")[0];
             }
-            todayTitle.setText(bibleList[0].createEntireTitle(bibleList[bibleList.length - 1]));
+            getVerseText();
+            todayTitle.setText(bibleList[0].createEntireTitleEng(bibleList) + ", " + bibleList[0].createEntireTitleKor(bibleList));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    static class Bible{
+    static class Bible {
         String book;
         String chapter;
         String verse;
-        public Bible(String book, String chapter, String verse){
+        String korBook;
+
+        public Bible(String book, String chapter, String verse) {
             this.book = book;
-            this.chapter =chapter;
+            this.chapter = chapter;
             this.verse = verse;
         }
-        public String createFormatted(){
+
+        public String createFormatted() {
             return book + " " + chapter + ":" + verse;
         }
-        public String createEntireTitle(Bible another){
-            return this.book +" "+ this.chapter +":" + this.verse +"~"+another.verse;
+
+        public String createEntireTitleEng(Bible[] entire) {
+            boolean flag = true;
+            int tmp = 0;
+            for (int i = 0; i < entire.length; ++i) {
+                if (!this.book.equals(entire[i].book)) {
+                    flag = false;
+                    tmp = i;
+                    break;
+                }
+            }
+            if (flag) {
+                return this.book + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+            } else {
+                String front = this.book + " " + this.chapter + ":" + this.verse + "~" + entire[tmp - 1].verse;
+                String rear = entire[tmp].book + " " + entire[tmp].chapter + ":" + entire[tmp].verse
+                        + ((tmp == entire.length - 1) ? "" : "~" + entire[entire.length - 1].verse);
+                return front + ", " + rear;
+            }
+        }
+
+        public String createEntireTitleKor(Bible[] entire) {
+            boolean flag = true;
+            int tmp = 0;
+            for (int i = 0; i < entire.length; ++i) {
+                if (!this.book.equals(entire[i].book)) {
+                    flag = false;
+                    tmp = i;
+                    break;
+                }
+            }
+            if (flag) {
+                return this.korBook + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+            } else {
+                String front = this.korBook + " " + this.chapter + ":" + this.verse + "~" + entire[tmp - 1].verse;
+                String rear = entire[tmp].korBook + " " + entire[tmp].chapter + ":" + entire[tmp].verse
+                        + ((tmp == entire.length - 1) ? "" : "~" + entire[entire.length - 1].verse);
+                return front + ", " + rear;
+            }
         }
     }
 }
