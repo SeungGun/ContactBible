@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:textStyle="bold"
             android:textSize="11pt"
-            android:textColor="#8c8c8c"/>
+            android:textColor="#282828"/>
     </LinearLayout>
     </ScrollView>
 </LinearLayout>

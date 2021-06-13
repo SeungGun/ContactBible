@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.windry.contactbible"
-    android:versionCode="4"
-    android:versionName="1.1.2">
+    android:versionCode="5"
+    android:versionName="1.1.3">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_contact_hand_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activities.TodayVerseActivity"></activity>
+        <activity android:name=".activities.TodayVerseActivity"/>
         <activity android:name=".activities.SettingActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
