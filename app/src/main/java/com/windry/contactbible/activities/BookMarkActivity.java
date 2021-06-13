@@ -94,7 +94,7 @@ public class BookMarkActivity extends AppCompatActivity {
                     if (!isKorean) {
                         getParsedJson(demo_sheet.getCell(0, findIndex(bookMarkAdapter.getItem(i).getTitle())).getContents(), i, t);
                         bookMarkAdapter.setItem(i, ContextCompat.getDrawable(getApplicationContext(), R.drawable.filled_bookmark), bookMarkAdapter
-                                .getItem(i).getTitle() + "\n" + "로딩중 입니다.", t);
+                                .getItem(i).getTitle() + "\n" + "불러오는 중입니다.", t);
 
                     } else {
                         bookMarkAdapter.setItem(i, ContextCompat.getDrawable(getApplicationContext(), R.drawable.filled_bookmark), bookMarkAdapter

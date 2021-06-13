@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:text="로딩 중입니다"
+                    android:text="불러오는 중입니다..."
                     android:textSize="8pt" />
                 </LinearLayout>
             </LinearLayout>

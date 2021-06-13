@@ -43,8 +43,8 @@
             android:checked="false"
             android:elevation="10dp"
             android:textColor="#000000"
-            android:textOff="영"
-            android:textOn="한"
+            android:textOff="한"
+            android:textOn="영"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:text="로딩 중입니다"
+                android:text="불러오는 중입니다..."
                 android:textSize="13pt" />
 
         </LinearLayout>

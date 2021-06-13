@@ -3,6 +3,7 @@ package com.windry.contactbible.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import jxl.Sheet;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +43,9 @@ public class TodayVerseActivity extends AppCompatActivity {
     private LinearLayout loadingScr;
     private LinearLayout mainScr;
     private ImageButton back_btn;
-
+    private SharedPreferences languagePref;
+    private SharedPreferences.Editor editor;
+    private boolean isKorean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,12 @@ public class TodayVerseActivity extends AppCompatActivity {
         loadingScr = findViewById(R.id.loading_scr);
         mainScr = findViewById(R.id.today_scr);
         back_btn = findViewById(R.id.back_menu);
+        languagePref = getSharedPreferences("side", MODE_PRIVATE);
+        editor = languagePref.edit();
+
+        isKorean = languagePref.getBoolean("language",true);
+        languageToggle.setChecked(isKorean);
+
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,13 +74,19 @@ public class TodayVerseActivity extends AppCompatActivity {
         languageToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
+                if(!b) {
+                    isKorean = !isKorean;
                     adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, engList);
                     todayTitle.setText(bibleList[0].createEntireTitleEng(bibleList));
+                    editor.putBoolean("language",false);
+                    editor.apply();
                 }
                 else {
+                    isKorean = !isKorean;
                     adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
                     todayTitle.setText(bibleList[0].createEntireTitleKor(bibleList));
+                    editor.putBoolean("language",true);
+                    editor.apply();
                 }
                 todayList.setAdapter(adapter);
             }
@@ -83,7 +98,7 @@ public class TodayVerseActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https://labs.bible.org/api/?passage=votd&type=json");
+                    URL url = new URL("https://labs.bible.org/api/?passage=votd&type=json&formatting=plain");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                     String tempString;
@@ -127,7 +142,7 @@ public class TodayVerseActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https://labs.bible.org/api/?passage="+ finalStr +"&type=json");
+                    URL url = new URL("https://labs.bible.org/api/?passage="+ finalStr +"&type=json&formatting=plain");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                     String tempString;
@@ -162,7 +177,6 @@ public class TodayVerseActivity extends AppCompatActivity {
         }).start();
     }
     public void getVerseText() {
-
         for (int i = 0; i < indexList.length; ++i) {
             korList[i] = korSheet.getCell(1, indexList[i]).getContents();
         }
@@ -179,18 +193,24 @@ public class TodayVerseActivity extends AppCompatActivity {
     public void parseJsonAsFormat(String jsonString, int index){
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
-//            indexList = new int[jsonArray.length()];
-//            bibleList = new Bible[jsonArray.length()];
-//            korList = new String[indexList.length];
-//            engList = new String[indexList.length];
-
             for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 engList[index] = jsonObject.optString("text");
             }
+            if(index == indexList.length - 1) {
+                if (!isKorean) {
+                    todayTitle.setText(bibleList[0].createEntireTitleEng(bibleList));
+                    adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, engList);
+                }
+                todayList.setAdapter(adapter);
+                loadingScr.setVisibility(View.GONE);
+                mainScr.setVisibility(View.VISIBLE);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("a"+index,"ff");
+
     }
     public void parseJson(String jsonString) {
         try {
@@ -209,14 +229,14 @@ public class TodayVerseActivity extends AppCompatActivity {
                 indexList[i] = findIndex(bibleList[i].createFormatted());
                 bibleList[i].korBook = korSheet.getCell(0, indexList[i]).getContents().split(" ")[0];
                 getTodayVerseFromJson(bibleList[i].createFormatted(), i);
+
             }
             getVerseText();
+            if(isKorean) {
+                todayTitle.setText(bibleList[0].createEntireTitleKor(bibleList));
+                adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
+            }
 
-            todayTitle.setText(bibleList[0].createEntireTitleKor(bibleList));
-            adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_list_item_1, korList);
-            todayList.setAdapter(adapter);
-            loadingScr.setVisibility(View.GONE);
-            mainScr.setVisibility(View.VISIBLE);
         } catch (JSONException e) {
             e.printStackTrace();
         }

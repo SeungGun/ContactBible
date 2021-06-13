@@ -1,7 +1,6 @@
 package com.windry.contactbible.activities;
 //Copyright by Seunggun sin
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -161,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private MediaPlayer mediaPlayer;
     private SharedPreferences pref;
     private SharedPreferences side_pref;
+    private SharedPreferences.Editor editor;
     private String outer_str; // 성경배열을 받는 임시 변수
     private String mid_str;
     private String mid_reverse_str;
@@ -210,10 +210,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         /* 초기 설정된 index의 memo 내용 불러오기 */
         selectMEMODB();
 
-        /* 초기 제목과 내용 설정 */
-        content.setText(korean_sheet.getCell(1, index).getContents());
-        title.setText(korean_sheet.getCell(0, index).getContents());
-
         /* 초기 북마크 값 가져오기 */
         getInitialBookmark();
 
@@ -225,14 +221,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         /* 절 단위 모드 초기 설정 및 글씨 크기 조절 bar 초기 설정*/
         side_pref = getSharedPreferences("side", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = side_pref.edit();
+        editor = side_pref.edit();
 
         int initial_text_size = side_pref.getInt("text_size", 17); //chk
         textSize_control.setProgress(initial_text_size); //chk
 
-        /* List View & NaviBar설정 */
-        for (String each : korean_bible_titleList) {
-            sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_menu_book_24), each);
+        /* 초기 제목과 내용 설정 */
+        isKorean = side_pref.getBoolean("language",true);
+        if(isKorean) {
+            for (String each : korean_bible_titleList) {
+                sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_menu_book_24), each);
+            }
+        }
+        else{
+            for (String each : bible_titleList) {
+                sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_menu_book_24), each);
+            }
         }
         listView.setAdapter(sideOuterMenuAdapter);
 
@@ -839,13 +843,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     public void switchLanguage() {
-        language_switch.setChecked(true); //chk
+        language_switch.setChecked(isKorean); //chk
         language_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     isKorean = true;
                     showToast("한글 모드");
+                    editor.putBoolean("language",true);
+                    editor.apply();
                     ChangeLanguage(isKorean);
                     if (current_side_num == 1) {
                         content.setText(korean_sheet.getCell(1, index).getContents());
@@ -864,6 +870,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 } else {
                     isKorean = false;
                     showToast("영어 모드");
+                    editor.putBoolean("language",false);
+                    editor.apply();
                     ChangeLanguage(isKorean);
                     if (current_side_num == 1) {
                         setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
@@ -4132,14 +4140,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         final String finalReceive = recv;
 
         if (currSide == 1) {
-            content.setText("로딩 중입니다.");
+            content.setText("불러오는 중입니다.");
         } else if (currSide == 2) {
-            side2_left_content.setText("로딩 중입니다.");
-            side2_right_content.setText("로딩 중입니다.");
+            side2_left_content.setText("불러오는 중입니다.");
+            side2_right_content.setText("불러오는 중입니다.");
         } else if (currSide == 3) {
-            side3_left_content.setText("로딩 중입니다.");
-            side3_center_content.setText("로딩 중입니다.");
-            side3_right_content.setText("로딩 중입니다.");
+            side3_left_content.setText("불러오는 중입니다.");
+            side3_center_content.setText("불러오는 중입니다.");
+            side3_right_content.setText("불러오는 중입니다.");
         }
 
         new Thread(new Runnable() {
@@ -4151,7 +4159,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     // 파싱 결과의 순서는 다 달라질 수 있다.
                     final String receiveMsgFromJson;
                     String tempString;
-                    URL url = new URL("https://labs.bible.org/api/?passage=" + finalReceive + "&type=json");
+                    URL url = new URL("https://labs.bible.org/api/?passage=" + finalReceive + "&type=json&formatting=plain");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
