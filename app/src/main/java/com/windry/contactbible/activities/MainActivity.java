@@ -981,7 +981,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1001,7 +1001,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1251,7 +1251,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (index + 2 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1273,7 +1273,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (index + 2 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1422,7 +1422,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1442,7 +1442,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
