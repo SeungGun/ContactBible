@@ -85,22 +85,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private View drawerView;
     private Workbook workbook; // 파일 읽기
     private Workbook korean_workbook;
-    public Sheet sheet; // 엑셀파일에서 읽어들인 값들
-    public Sheet korean_sheet;
+    public Sheet eng_sheet; // 엑셀 객체 - 영어
+    public Sheet korean_sheet; // 액셀 객체 - 한글
 
-    private ListView listView; // 사이드바 Outer 리스트뷰
-    private ListView innerContent; // 사이드바 Inner 리스트뷰
-    private ListView mid_Content; // 사이드바 Mid 리스트뷰
+    private ListView outerListView; // 사이드바 Outer 리스트뷰
+    private ListView innerListView; // 사이드바 Inner 리스트뷰
+    private ListView midListView; // 사이드바 Mid 리스트뷰
 
-    private LinearLayout scr; // 1절 단위 시 보여지는 내용의 Layout
     private ScrollView side1_layout; // 1절 단위 화면 layout
-    private LinearLayout side2_layout; // 2절 단위 전체화면 layout
-    private LinearLayout side3_layout; // 3절 단위 전체화면 layout
-    private LinearLayout side2_left_layout; // 2절 단위 왼쪽 화면 layout
-    private LinearLayout side2_right_layout; // 2절 단위 오른쪽 화면 layout
-    private LinearLayout side3_left_layout; // 3절 단위 왼쪽 화면 layout
-    private LinearLayout side3_center_layout; // 3절 단위 가운데 화면 layout
-    private LinearLayout side3_right_layout; // 3절 단위 오른쪽 화면 layout
+    private ScrollView side2_layout; // 2절 단위 화면 layout
+    private ScrollView side3_layout; // 3절 단위 화면 layout
+
+    private LinearLayout side1_entire;
+    private LinearLayout side2_entire;
+    private LinearLayout side3_entire;
     private LinearLayout bottom_menu; // 하단 메뉴 화면 layout
     private LinearLayout top_menu; // 상단 메뉴 화면 layout
     private LinearLayout bottom_center_menu;
@@ -108,13 +106,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private LinearLayout above_content_layout;
     private LinearLayout loadingMenu;
 
-    private TextView content; // 1절 단위 시 내용 보여주는 Text View
+    private TextView side1_Content; // 1절 단위 시 내용 보여주는 Text View
     private TextView title; // 상단바에 보여지는 제목 Text View
-    private TextView side2_left_content; // 2절 단위 시 왼쪽 내용
-    private TextView side2_right_content; // 2절 단위 시 오른쪽 내용
-    private TextView side3_left_content; // 3절 단위 시 왼쪽 내용
-    private TextView side3_center_content; // 3절 단위 시 중간 내용
-    private TextView side3_right_content; // 3절 단우 시 오른쪽 내용
+    private TextView side2_Content; // 2절 단위 시 왼쪽 내용
+    private TextView side3_Content; // 3절 단위 시 왼쪽 내용
     private EditText memo_content; // 메모 입력하는 공간
 
     private IndexDBHelper dbHelper; //현재 성경위치 대한 인덱스 데이터베이스
@@ -227,18 +222,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         textSize_control.setProgress(initial_text_size); //chk
 
         /* 초기 제목과 내용 설정 */
-        isKorean = side_pref.getBoolean("language",true);
-        if(isKorean) {
+        isKorean = side_pref.getBoolean("language", true);
+        if (isKorean) {
             for (String each : korean_bible_titleList) {
                 sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_menu_book_24), each);
             }
-        }
-        else{
+        } else {
             for (String each : bible_titleList) {
                 sideOuterMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_menu_book_24), each);
             }
         }
-        listView.setAdapter(sideOuterMenuAdapter);
+        outerListView.setAdapter(sideOuterMenuAdapter);
 
         list_thread = new ListClickThread();
         list_thread.start();
@@ -313,14 +307,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (current_side_num == 1) {
-                    content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
+                    side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
                 } else if (current_side_num == 2) {
-                    side2_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
-                    side2_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
+                    side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
                 } else if (current_side_num == 3) {
-                    side3_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
-                    side3_center_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
-                    side3_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
+                    side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, seekBar.getProgress());
                 }
                 editor.putInt("text_size", seekBar.getProgress());
                 editor.apply();
@@ -347,17 +338,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 side3_layout.setVisibility(View.GONE);
 
                 if (!isKorean) {
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                    title.setText(sheet.getCell(0, index).getContents());
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                    title.setText(eng_sheet.getCell(0, index).getContents());
                 } else {
-                    content.setText(korean_sheet.getCell(1, index).getContents());
+                    side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                     title.setText(korean_sheet.getCell(0, index).getContents());
                 }
                 title_textSize = 14;
                 title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-
+                side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 getInitialBookmark();
+
                 break;
             case 1:
                 if (!isKorean) {
@@ -367,29 +358,27 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     side2_layout.setVisibility(View.VISIBLE);
                     side3_layout.setVisibility(View.GONE);
                     title_textSize = 13;
+
                     title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-
-                    String splitStr1 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1).getContents());
+                    String splitStr1 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1).getContents());
                     title.setText(splitStr1);
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
 
-                    side2_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side2_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
+                    side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 } else {
                     memo_OnOff.setVisibility(View.INVISIBLE);
                     bookmarking.setVisibility(View.INVISIBLE);
                     side1_layout.setVisibility(View.GONE);
                     side2_layout.setVisibility(View.VISIBLE);
                     side3_layout.setVisibility(View.GONE);
-                    title_textSize = 13;
-                    title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
 
+                    title_textSize = 13;
+
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                     title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                    side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                    side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                    side2_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side2_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
+                    side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
+                    side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 }
                 break;
             case 2:
@@ -399,20 +388,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     side1_layout.setVisibility(View.GONE);
                     side2_layout.setVisibility(View.GONE);
                     side3_layout.setVisibility(View.VISIBLE);
-
                     title_textSize = 11;
+
                     title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                    String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                            .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                    String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                            .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                     title.setText(splitStr2);
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
 
-                    side3_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side3_center_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side3_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
+                    side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 } else {
                     memo_OnOff.setVisibility(View.INVISIBLE);
                     bookmarking.setVisibility(View.INVISIBLE);
@@ -424,13 +408,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                     title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                             korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                    side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                    side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                    side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
 
-                    side3_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side3_center_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                    side3_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+                    side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                            + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
+                    side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
                 }
                 break;
         }
@@ -457,16 +439,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         side3_layout.setVisibility(View.GONE);
 
                         if (!isKorean) {
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                            title.setText(sheet.getCell(0, index).getContents());
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                            title.setText(eng_sheet.getCell(0, index).getContents());
                         } else {
-                            content.setText(korean_sheet.getCell(1, index).getContents());
+                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                             title.setText(korean_sheet.getCell(0, index).getContents());
                         }
                         title_textSize = 14;
                         title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                         textSize_control.setProgress(17, true);
-                        content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+                        side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
                         current_side_num = 1;
                         editor.putInt("side_mode", current_side_num);
@@ -475,7 +457,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         getInitialBookmark();
                         break;
                     case 1:
-
                         if (!isKorean) {
                             if (index + 1 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
@@ -487,14 +468,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 title_textSize = 13;
                                 title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
 
-                                String splitStr1 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1).getContents());
+                                String splitStr1 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1).getContents());
                                 title.setText(splitStr1);
 
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
+                                side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
-                                side2_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                                side2_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                                 current_side_num = 2;
                                 editor.putInt("side_mode", current_side_num);
                                 editor.apply();
@@ -511,14 +490,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 side3_layout.setVisibility(View.GONE);
                                 textSize_control.setProgress(15, true);
                                 title_textSize = 13;
-                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
 
+                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                                 title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                                side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                                side2_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                                side2_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
+                                side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
+                                side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
                                 current_side_num = 2;
+
                                 editor.putInt("side_mode", current_side_num);
                                 editor.apply();
                             } else {
@@ -528,7 +508,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         }
                         break;
                     case 2:
-
                         if (!isKorean) {
                             if (index + 2 <= MAX_ROW_EXCEL) {
                                 memo_OnOff.setVisibility(View.INVISIBLE);
@@ -544,13 +523,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                                 title_textSize = 11;
                                 title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                                String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                        .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                                String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                        .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                                 title.setText(splitStr2);
 
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
+
                             } else {
                                 showToast("마지막 절입니다!");
                                 seekBar.setProgress(0, true);
@@ -565,20 +543,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 textSize_control.setProgress(13, true);
 
                                 title_textSize = 11;
+
                                 title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
                                 title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                         korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                                side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                                side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+
+                                side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                        + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
+                                side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
                                 current_side_num = 3;
                                 editor.putInt("side_mode", current_side_num);
                                 editor.apply();
-
-                                side3_left_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                                side3_center_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-                                side3_right_content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                             } else {
                                 showToast("마지막 절입니다!");
                                 seekBar.setProgress(0, true);
@@ -589,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
         /*-----------------------------------------------------------------------------------*/
-        scr.setOnTouchListener(new View.OnTouchListener() {
+        side1_entire.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gestureDetector.onTouchEvent(motionEvent);
@@ -597,14 +573,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
 
-        side2_left_layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                gestureDetector.onTouchEvent(motionEvent);
-                return true;
-            }
-        });
-        side2_right_layout.setOnTouchListener(new View.OnTouchListener() {
+        side2_entire.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gestureDetector.onTouchEvent(motionEvent);
@@ -612,23 +581,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
 
-        side3_left_layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                gestureDetector.onTouchEvent(motionEvent);
-                return true;
-            }
-        });
-
-        side3_center_layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                gestureDetector.onTouchEvent(motionEvent);
-                return true;
-            }
-        });
-
-        side3_right_layout.setOnTouchListener(new View.OnTouchListener() {
+        side3_entire.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gestureDetector.onTouchEvent(motionEvent);
@@ -657,32 +610,32 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (isInnerSheet) {
                     if (isKorean) {
                         getString_mid_ListView(korean_bible_titleList[mid_index]);
-                        mid_Content.setAdapter(sideMidMenuAdapter);
+                        midListView.setAdapter(sideMidMenuAdapter);
                     } else {
                         getString_mid_ListView(bible_titleList[mid_index]);
-                        mid_Content.setAdapter(sideMidMenuAdapter);
+                        midListView.setAdapter(sideMidMenuAdapter);
                     }
                     isInnerSheet = false;
                     isMidSheet = true;
                     isOuterSheet = false;
                     loadingMenu.setVisibility(View.VISIBLE);
-                    innerContent.setVisibility(View.GONE);
-                    listView.setVisibility(View.GONE);
+                    innerListView.setVisibility(View.GONE);
+                    outerListView.setVisibility(View.GONE);
                     language_switch.setVisibility(View.VISIBLE);
                 } else if (isMidSheet) {
                     if (isKorean) {
                         setOuterAdapter(korean_bible_titleList);
-                        listView.setAdapter(sideOuterMenuAdapter);
+                        outerListView.setAdapter(sideOuterMenuAdapter);
                     } else {
                         setOuterAdapter(bible_titleList);
-                        listView.setAdapter(sideOuterMenuAdapter);
+                        outerListView.setAdapter(sideOuterMenuAdapter);
                     }
                     isOuterSheet = true;
                     isInnerSheet = false;
                     isMidSheet = false;
-                    listView.setVisibility(View.VISIBLE);
-                    innerContent.setVisibility(View.GONE);
-                    mid_Content.setVisibility(View.GONE);
+                    outerListView.setVisibility(View.VISIBLE);
+                    innerListView.setVisibility(View.GONE);
+                    midListView.setVisibility(View.GONE);
                     outer_btn.setVisibility(View.INVISIBLE);
                     language_switch.setVisibility(View.VISIBLE);
 
@@ -800,8 +753,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         language_switch = findViewById(R.id.language_switch);
 
+        side1_entire = findViewById(R.id.side1_entire);
+        side2_entire = findViewById(R.id.side2_entire);
+        side3_entire = findViewById(R.id.side3_entire);
+
         bookmarking = findViewById(R.id.bookmark);
-        content = findViewById(R.id.text1);
+        side1_Content = findViewById(R.id.side1_text);
         title = findViewById(R.id.title_content);
         bottom_menu = findViewById(R.id.bottom_menu);
         top_menu = findViewById(R.id.top_menu_layout);
@@ -810,28 +767,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_OnOff = findViewById(R.id.btn1); // turn on/off the "MEMO space" through button
         quit_memo_btn = findViewById(R.id.quit_memo);
 
-        listView = findViewById(R.id.list_excel);
+        outerListView = findViewById(R.id.list_excel);
 
         outer_btn = findViewById(R.id.outer_btn);
-        scr = findViewById(R.id.screen_layout);
         side1_layout = findViewById(R.id.side1_layout);
 
-        innerContent = findViewById(R.id.inner_excel);
-        mid_Content = findViewById(R.id.mid_excel);
+        innerListView = findViewById(R.id.inner_excel);
+        midListView = findViewById(R.id.mid_excel);
 
         side2_layout = findViewById(R.id.side2_layout);
-        side2_left_content = findViewById(R.id.side2_left_text);
-        side2_right_content = findViewById(R.id.side2_right_text);
-        side2_left_layout = findViewById(R.id.side2_left_layout);
-        side2_right_layout = findViewById(R.id.side2_right_layout);
+        side2_Content = findViewById(R.id.side2_text);
 
         side3_layout = findViewById(R.id.side3_layout);
-        side3_left_layout = findViewById(R.id.side3_left_layout);
-        side3_center_layout = findViewById(R.id.side3_center_layout);
-        side3_right_layout = findViewById(R.id.side3_right_layout);
-        side3_left_content = findViewById(R.id.side3_left_text);
-        side3_center_content = findViewById(R.id.side3_center_text);
-        side3_right_content = findViewById(R.id.side3_right_text);
+        side3_Content = findViewById(R.id.side3_text);
         above_content_layout = findViewById(R.id.above_content_layout);
         loadingMenu = findViewById(R.id.loading_scr_inMenu);
 
@@ -850,47 +798,40 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (b) {
                     isKorean = true;
                     showToast("한글 모드");
-                    editor.putBoolean("language",true);
+                    editor.putBoolean("language", true);
                     editor.apply();
                     ChangeLanguage(isKorean);
                     if (current_side_num == 1) {
-                        content.setText(korean_sheet.getCell(1, index).getContents());
+                        side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                         title.setText(korean_sheet.getCell(0, index).getContents());
                     } else if (current_side_num == 2) {
-                        side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                        side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                        side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                         title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
                     } else if (current_side_num == 3) {
                         title.setText(korean_sheet.getCell(0, index).getContents() + ", " + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + ", " +
                                 korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                        side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                        side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                        side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                        side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                     }
                 } else {
                     isKorean = false;
                     showToast("영어 모드");
-                    editor.putBoolean("language",false);
+                    editor.putBoolean("language", false);
                     editor.apply();
                     ChangeLanguage(isKorean);
                     if (current_side_num == 1) {
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                        title.setText(sheet.getCell(0, index).getContents());
+                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                        title.setText(eng_sheet.getCell(0, index).getContents());
                     } else if (current_side_num == 2) {
-                        String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                        String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
                                 .getContents());
                         title.setText(splitStr2);
-
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                     } else if (current_side_num == 3) {
-                        String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                        String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                         title.setText(splitStr);
-
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                     }
                 }
             }
@@ -955,19 +896,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
         }
         if (pref.getInt("letterSpace", 0) != 0) {
-            float val = (float) pref.getInt("letterSpace", 0) / 10;
-            content.setLetterSpacing(val);
+            side1_Content.setLetterSpacing((float) pref.getInt("letterSpace", 0) / 10);
         }
         if (pref.getInt("lineSpace", 0) != 0) {
-            float val = (float) pref.getInt("lineSpace", 0) / 10 + 1;
-            content.setLineSpacing(0, val);
-
-            side2_left_content.setLineSpacing(0, val);
-            side2_right_content.setLineSpacing(0, val);
-
-            side3_left_content.setLineSpacing(0, val);
-            side3_center_content.setLineSpacing(0, val);
-            side3_right_content.setLineSpacing(0, val);
+            side1_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
+            side2_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
+            side3_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
         }
         if (!pref.getString("BackgroundColor", defaultThemeColor).equals(defaultThemeColor)) {
             above_content_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
@@ -976,12 +910,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             side3_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
         }
         if (!pref.getString("TextColor", defaultThemeColor).equals(defaultThemeColor)) {
-            content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-            side2_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-            side2_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-            side3_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-            side3_center_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-            side3_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+            side1_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+            side2_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+            side3_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
         }
         pref.registerOnSharedPreferenceChangeListener(listener);
     }
@@ -995,9 +926,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index, "true");
                     if (!isKorean) {
                         if (index < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 1).getContents())) {
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1013,8 +944,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             getInitialBookmark();
                             selectMEMODB();
 
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                            title.setText(sheet.getCell(0, index).getContents());
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                            title.setText(eng_sheet.getCell(0, index).getContents());
 
                         } else {
                             showToast("마지막 절입니다!");
@@ -1037,21 +968,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
-                            content.setText(korean_sheet.getCell(1, index).getContents());
+                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                             title.setText(korean_sheet.getCell(0, index).getContents());
                         } else {
                             showToast("마지막 절입니다!");
                         }
                     }
                 } else if (side2_layout.getVisibility() == View.VISIBLE) {
-
                     bmDBHelper.updateRecord(index, "true");
                     bmDBHelper.updateRecord(index + 1, "true");
                     if (!isKorean) {
                         if (index < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1062,13 +992,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 }, 1600);
                             }
                             index += 2;
-                            String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                            String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
                                     .getContents());
                             title.setText(splitStr2);
-
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
-
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                         }
                     } else {
                         if (index < MAX_ROW_EXCEL) {
@@ -1086,8 +1013,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                             index += 2;
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                            side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                            side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                         }
                     }
                 } else if (side3_layout.getVisibility() == View.VISIBLE) {
@@ -1096,9 +1022,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index + 2, "true");
                     if (!isKorean) {
                         if (index + 3 < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1111,13 +1037,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             index += 3;
                             dbHelper.updateRecord(index);
 
-                            String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                    .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                            String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                    .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                             title.setText(splitStr);
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
-
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                         } else {
                             showToast("마지막 절입니다!");
                         }
@@ -1139,9 +1062,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             dbHelper.updateRecord(index);
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                     korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                            side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                            side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                            side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                    + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                         } else {
                             showToast("마지막 절입니다!");
                         }
@@ -1153,8 +1075,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     if (index > 1) {
                         if (!isKorean) {
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
-                            title.setText(sheet.getCell(0, index).getContents());
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
+                            title.setText(eng_sheet.getCell(0, index).getContents());
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
@@ -1164,9 +1086,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                         } else {
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
-
                             title.setText(korean_sheet.getCell(0, index).getContents());
-                            content.setText(korean_sheet.getCell(1, index).getContents());
+                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
@@ -1196,17 +1117,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             bmDBHelper.deleteRecord(index + 1);
                         }
                         if (!isKorean) {
-                            String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                            String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
                                     .getContents());
                             title.setText(splitStr2);
-
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
-
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                         } else {
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                            side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                            side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                         }
                     } else if (index == 1) {
                         showToast("제일 첫 구절입니다.");
@@ -1230,20 +1147,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 bmDBHelper.deleteRecord(index + i);
                             }
                             if (!isKorean) {
-                                String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                        .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                                String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                        .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                                 title.setText(splitStr);
-
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
-
+                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                             } else {
                                 title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                         korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                                side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                                side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                                side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                        + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                             }
                         }
                     } else if (index == 1) {
@@ -1272,7 +1184,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
      */
     @Override
     public boolean onDown(MotionEvent motionEvent) {
-
         return true;
     }
 
@@ -1287,9 +1198,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bmDBHelper.updateRecord(index, "true");
             if (!isKorean) {
                 if (index < MAX_ROW_EXCEL) {
-                    if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
+                    if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 1).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1304,8 +1215,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     dbHelper.updateRecord(index);
                     getInitialBookmark();
                     selectMEMODB();
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                    title.setText(sheet.getCell(0, index).getContents());
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                    title.setText(eng_sheet.getCell(0, index).getContents());
                 } else {
                     showToast("마지막 절입니다!");
                 }
@@ -1327,7 +1238,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     dbHelper.updateRecord(index);
                     getInitialBookmark();
                     selectMEMODB();
-                    content.setText(korean_sheet.getCell(1, index).getContents());
+                    side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                     title.setText(korean_sheet.getCell(0, index).getContents());
                 } else {
                     showToast("마지막 절입니다!");
@@ -1338,9 +1249,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bmDBHelper.updateRecord(index + 1, "true");
             if (!isKorean) {
                 if (index + 2 < MAX_ROW_EXCEL) {
-                    if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
+                    if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1352,11 +1263,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     index += 2;
                     dbHelper.updateRecord(index);
-                    String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1).getContents());
+                    String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1).getContents());
                     title.setText(splitStr);
-
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                 } else {
                     showToast("마지막 절입니다!");
                 }
@@ -1377,8 +1286,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     index += 2;
                     dbHelper.updateRecord(index);
                     title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                    side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                    side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                    side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                 } else {
                     showToast("마지막 절입니다!");
                 }
@@ -1389,9 +1297,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             bmDBHelper.updateRecord(index + 2, "true");
             if (!isKorean) {
                 if (index + 3 < MAX_ROW_EXCEL) {
-                    if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
+                    if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1403,13 +1311,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     }
                     index += 3;
                     dbHelper.updateRecord(index);
-                    String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                            .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                    String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                            .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                     title.setText(splitStr);
-
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                    setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                 } else {
                     showToast("마지막 절입니다!");
                 }
@@ -1431,9 +1336,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     dbHelper.updateRecord(index);
                     title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                             korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                    side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                    side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                    side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                    side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                            + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                 } else {
                     showToast("마지막 절입니다!");
                 }
@@ -1465,9 +1369,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index, "true");
                     if (!isKorean) {
                         if (index < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 1).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 1).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1481,8 +1385,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                            title.setText(sheet.getCell(0, index).getContents());
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                            title.setText(eng_sheet.getCell(0, index).getContents());
                         } else {
                             showToast("마지막 절입니다!");
                         }
@@ -1504,7 +1408,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             selectMEMODB();
-                            content.setText(korean_sheet.getCell(1, index).getContents());
+                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                             title.setText(korean_sheet.getCell(0, index).getContents());
                         } else {
                             showToast("마지막 절입니다!");
@@ -1516,9 +1420,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index + 1, "true");
                     if (!isKorean) {
                         if (index < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 2).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 2).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1529,12 +1433,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 }, 1600);
                             }
                             index += 2;
-                            String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                            String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
                                     .getContents());
                             title.setText(splitStr2);
-
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                         }
                     } else {
                         if (index < MAX_ROW_EXCEL) {
@@ -1552,8 +1454,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             }
                             index += 2;
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                            side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                            side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                         }
                     }
                 } else if (side3_layout.getVisibility() == View.VISIBLE) {
@@ -1562,9 +1463,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bmDBHelper.updateRecord(index + 2, "true");
                     if (!isKorean) {
                         if (index + 3 < MAX_ROW_EXCEL) {
-                            if (extractSheetNum(sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(sheet.getCell(0, index + 3).getContents())) {
+                            if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1577,13 +1478,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             index += 3;
                             dbHelper.updateRecord(index);
 
-                            String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                    .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                            String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                    .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                             title.setText(splitStr);
 
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                         } else {
                             showToast("마지막 절입니다!");
                         }
@@ -1605,9 +1504,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             dbHelper.updateRecord(index);
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                     korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                            side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                            side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                            side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                    + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                         } else {
                             showToast("마지막 절입니다!");
                         }
@@ -1615,16 +1513,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
             }
             /*--------------------------------------------------------------------------------------*/
-
             // ★left to right swipe  // 이전 화면으로 이동
             else if (motionEvent1.getX() - motionEvent.getX() > SWIPE_MIN_DISTANCE && Math.abs(v) > SWIPE_THRESHOLD_VELOCITY) {
                 if (side1_layout.getVisibility() == View.VISIBLE) {
                     if (index > 1) {
                         if (!isKorean) {
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
-                            title.setText(sheet.getCell(0, index).getContents());
-//                            content.setText(sheet.getCell(1, index).getContents());
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
+                            title.setText(eng_sheet.getCell(0, index).getContents());
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
@@ -1635,7 +1531,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         } else {
                             index -= 1; // 위의 src에서 gesture.onTouch 이벤트와 일반 터치 이벤트가 겹쳐서 인덱스가 하나 줄으면 다시 늘어서 하나 줄이는 효과로 2를 줄임
                             title.setText(korean_sheet.getCell(0, index).getContents());
-                            content.setText(korean_sheet.getCell(1, index).getContents());
+                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                             dbHelper.updateRecord(index);
                             getInitialBookmark();
                             Cursor cursor = bmDBHelper.readIDRecord(index + 1);
@@ -1665,16 +1561,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             bmDBHelper.deleteRecord(index + 1);
                         }
                         if (!isKorean) {
-                            String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
+                            String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
                                     .getContents());
                             title.setText(splitStr2);
-
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                            setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                         } else {
                             title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                            side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                            side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                            side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                         }
                     } else if (index == 1) {
                         showToast("제일 첫 구절입니다.");
@@ -1698,19 +1591,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 bmDBHelper.deleteRecord(index + i);
                             }
                             if (!isKorean) {
-                                String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                        .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                                String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                        .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                                 title.setText(splitStr);
-
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                                setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                             } else {
                                 title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                         korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                                side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                                side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                                side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                        + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                             }
                         }
                     } else if (index == 1) {
@@ -1752,19 +1641,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
                     break;
                 case "letterSpace": {
-                    float val = (float) pref.getInt("letterSpace", 0) / 10;
-                    content.setLetterSpacing(val);
+                    side1_Content.setLetterSpacing((float) pref.getInt("letterSpace", 0) / 10);
                     break;
                 }
                 case "lineSpace": {
-                    float val = (float) pref.getInt("lineSpace", 0) / 10 + 1;
-                    content.setLineSpacing(0, val);
-                    side2_left_content.setLineSpacing(0, val);
-                    side2_right_content.setLineSpacing(0, val);
-
-                    side3_left_content.setLineSpacing(0, val);
-                    side3_center_content.setLineSpacing(0, val);
-                    side2_right_content.setLineSpacing(0, val);
+                    side1_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
+                    side2_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
+                    side3_Content.setLineSpacing(0, (float) pref.getInt("lineSpace", 0) / 10 + 1);
                     break;
                 }
                 case "BackgroundColor":
@@ -1772,15 +1655,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     side1_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
                     side2_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
                     side3_layout.setBackgroundColor(Color.parseColor(pref.getString("BackgroundColor", defaultThemeColor)));
-
                     break;
                 case "TextColor":
-                    content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                    side2_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                    side2_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                    side3_left_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                    side3_center_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
-                    side3_right_content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side1_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side2_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
+                    side3_Content.setTextColor(Color.parseColor(pref.getString("TextColor", defaultThemeColor)));
                     break;
             }
         }
@@ -1793,7 +1672,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             try {
                 InputStream inputStream = getBaseContext().getResources().getAssets().open("bibles.xls");
                 workbook = Workbook.getWorkbook(inputStream);
-                sheet = workbook.getSheet(0);
+                eng_sheet = workbook.getSheet(0);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (BiffException e) {
@@ -1829,7 +1708,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         @Override
         public void run() {
             if (isOuterSheet) {
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                outerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         isOuterSheet = false;
@@ -1841,22 +1720,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             outer_str = bible_titleList[i];
                         }
                         mid_index = i;
-                        listView.setVisibility(View.GONE);
-                        innerContent.setVisibility(View.GONE);
+                        outerListView.setVisibility(View.GONE);
+                        innerListView.setVisibility(View.GONE);
                         loadingMenu.setVisibility(View.VISIBLE);
                         getString_mid_ListView(outer_str);
-                        mid_Content.setAdapter(sideMidMenuAdapter);
+                        midListView.setAdapter(sideMidMenuAdapter);
 
 
                         outer_btn.setVisibility(View.VISIBLE);
                         if (isMidSheet) {
-                            mid_Content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            midListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    mid_Content.setVisibility(View.GONE);
-                                    innerContent.setVisibility(View.VISIBLE);
+                                    midListView.setVisibility(View.GONE);
+                                    innerListView.setVisibility(View.VISIBLE);
                                     getString_Inner_ListView(sideMidMenuAdapter.getItem(i).getTitle());
-                                    innerContent.setAdapter(sideMenuAdapter);
+                                    innerListView.setAdapter(sideMenuAdapter);
                                     mid_str = sideMidMenuAdapter.getItem(i).getTitle();
                                     isKorean = !isKorean;
                                     mid_reverse_str = reverse_Language(mid_str);
@@ -1866,7 +1745,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                     isOuterSheet = false;
                                     outer_btn.setVisibility(View.VISIBLE);
                                     if (isInnerSheet) {
-                                        innerContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        innerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                                 memo_OnOff.setVisibility(View.VISIBLE);
@@ -1892,12 +1771,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                                     side2_layout.setVisibility(View.GONE);
                                                     side3_layout.setVisibility(View.GONE);
                                                     if (isKorean) {
-                                                        content.setText(korean_sheet.getCell(1, index).getContents());
+                                                        side1_Content.setText(korean_sheet.getCell(1, index).getContents());
                                                         title.setText(korean_sheet.getCell(0, index).getContents());
                                                     } else {
-//                                                        content.setText(sheet.getCell(1, index).getContents());
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 1, "center");
-                                                        title.setText(sheet.getCell(0, index).getContents());
+                                                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                                                        title.setText(eng_sheet.getCell(0, index).getContents());
                                                     }
                                                 } else if (current_side_num == 2) {
                                                     side1_layout.setVisibility(View.GONE);
@@ -1905,15 +1783,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                                     side3_layout.setVisibility(View.GONE);
                                                     if (isKorean) {
                                                         title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
-                                                        side2_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                                        side2_right_content.setText(korean_sheet.getCell(1, index + 1).getContents());
+                                                        side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                                                     } else {
-                                                        String splitStr2 = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                                                        String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                                                .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                                                         title.setText(splitStr2);
-
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 2, "left");
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 2, "right");
+                                                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
                                                     }
                                                 } else if (current_side_num == 3) {
                                                     side1_layout.setVisibility(View.GONE);
@@ -1922,17 +1797,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                                     if (isKorean) {
                                                         title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
                                                                 korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                                                        side3_left_content.setText(korean_sheet.getCell(1, index).getContents());
-                                                        side3_center_content.setText(korean_sheet.getCell(1, index + 1).getContents());
-                                                        side3_right_content.setText(korean_sheet.getCell(1, index + 2).getContents());
+                                                        side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                                                + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
                                                     } else {
-                                                        String splitStr = sheet.getCell(0, index).getContents() + "," + splitTitle(sheet.getCell(0, index + 1)
-                                                                .getContents()) + "," + splitTitle(sheet.getCell(0, index + 2).getContents());
+                                                        String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                                                .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
                                                         title.setText(splitStr);
-
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index).getContents(), 3, "left");
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 1).getContents(), 3, "center");
-                                                        setContentAndconnectHttpAndGetJson(sheet.getCell(0, index + 2).getContents(), 3, "right");
+                                                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
                                                     }
                                                 }
                                             }
@@ -1950,7 +1821,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     /*---------------------------------------------------------------------------------------------------------- ListClickThread */
     public int findIndex(String str) {
         for (int i = 1; i <= MAX_ROW_EXCEL; ++i) {
-            if (sheet.getCell(0, i).getContents().equals(str)) {
+            if (eng_sheet.getCell(0, i).getContents().equals(str)) {
                 return i;
             }
         }
@@ -2018,32 +1889,32 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             if (isInnerSheet) {
                 if (isKorean) {
                     getString_mid_ListView(korean_bible_titleList[mid_index]);
-                    mid_Content.setAdapter(sideMidMenuAdapter);
+                    midListView.setAdapter(sideMidMenuAdapter);
                 } else {
                     getString_mid_ListView(bible_titleList[mid_index]);
-                    mid_Content.setAdapter(sideMidMenuAdapter);
+                    midListView.setAdapter(sideMidMenuAdapter);
                 }
                 isInnerSheet = false;
                 isMidSheet = true;
                 isOuterSheet = false;
                 loadingMenu.setVisibility(View.VISIBLE);
-                innerContent.setVisibility(View.GONE);
-                mid_Content.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
+                innerListView.setVisibility(View.GONE);
+                midListView.setVisibility(View.VISIBLE);
+                outerListView.setVisibility(View.GONE);
             } else if (isMidSheet) {
                 if (isKorean) {
                     setOuterAdapter(korean_bible_titleList);
-                    listView.setAdapter(sideOuterMenuAdapter);
+                    outerListView.setAdapter(sideOuterMenuAdapter);
                 } else {
                     setOuterAdapter(bible_titleList);
-                    listView.setAdapter(sideOuterMenuAdapter);
+                    outerListView.setAdapter(sideOuterMenuAdapter);
                 }
                 isOuterSheet = true;
                 isInnerSheet = false;
                 isMidSheet = false;
-                listView.setVisibility(View.VISIBLE);
-                innerContent.setVisibility(View.GONE);
-                mid_Content.setVisibility(View.GONE);
+                outerListView.setVisibility(View.VISIBLE);
+                innerListView.setVisibility(View.GONE);
+                midListView.setVisibility(View.GONE);
                 outer_btn.setVisibility(View.INVISIBLE);
             } else if (isOuterSheet)
                 drawerLayout.closeDrawers();
@@ -3423,7 +3294,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     @Override
                     public void run() {
                         loadingMenu.setVisibility(View.GONE);
-                        mid_Content.setVisibility(View.VISIBLE);
+                        midListView.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -3714,14 +3585,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Cursor cursor = bmDBHelper.readIDRecord(i);
             if (cursor.getCount() > 0) {
                 if (!isKorean) {
-                    sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), sheet.getCell(0, i).getContents());
+                    sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), eng_sheet.getCell(0, i).getContents());
                 } else {
                     sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_24), korean_sheet.getCell(0, i).getContents());
                 }
                 isAll.add(true);
             } else {
                 if (!isKorean) {
-                    sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), sheet.getCell(0, i).getContents());
+                    sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), eng_sheet.getCell(0, i).getContents());
                 } else {
                     sideMenuAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_check_box_outline_blank_24), korean_sheet.getCell(0, i).getContents());
                 }
@@ -3733,54 +3604,54 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public void ChangeLanguage(boolean isKorean_) {
         if (language_switch.isChecked()) {
             if (isOuterSheet) {
-                listView.setVisibility(View.VISIBLE);
+                outerListView.setVisibility(View.VISIBLE);
                 setOuterAdapter(korean_bible_titleList);
-                listView.setAdapter(sideOuterMenuAdapter);
-                mid_Content.setVisibility(View.GONE);
-                innerContent.setVisibility(View.GONE);
+                outerListView.setAdapter(sideOuterMenuAdapter);
+                midListView.setVisibility(View.GONE);
+                innerListView.setVisibility(View.GONE);
             } else if (isMidSheet) {
-                mid_Content.setVisibility(View.VISIBLE);
+                midListView.setVisibility(View.VISIBLE);
                 getString_mid_ListView(korean_bible_titleList[mid_index]);
-                mid_Content.setAdapter(sideMidMenuAdapter);
-                listView.setVisibility(View.GONE);
-                innerContent.setVisibility(View.GONE);
+                midListView.setAdapter(sideMidMenuAdapter);
+                outerListView.setVisibility(View.GONE);
+                innerListView.setVisibility(View.GONE);
             } else if (isInnerSheet) {
-                innerContent.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                mid_Content.setVisibility(View.GONE);
+                innerListView.setVisibility(View.VISIBLE);
+                outerListView.setVisibility(View.GONE);
+                midListView.setVisibility(View.GONE);
                 if (reverse_Language(mid_reverse_str).equals("Unexpected")) {
                     String tmp = mid_str;
                     mid_str = mid_reverse_str;
                     mid_reverse_str = tmp;
                 }
                 getString_Inner_ListView(mid_str);
-                innerContent.setAdapter(sideMenuAdapter);
+                innerListView.setAdapter(sideMenuAdapter);
             }
         } else {
             if (isOuterSheet) {
-                listView.setVisibility(View.VISIBLE);
+                outerListView.setVisibility(View.VISIBLE);
                 setOuterAdapter(bible_titleList);
-                listView.setAdapter(sideOuterMenuAdapter);
+                outerListView.setAdapter(sideOuterMenuAdapter);
 
-                mid_Content.setVisibility(View.GONE);
-                innerContent.setVisibility(View.GONE);
+                midListView.setVisibility(View.GONE);
+                innerListView.setVisibility(View.GONE);
             } else if (isMidSheet) {
-                mid_Content.setVisibility(View.VISIBLE);
+                midListView.setVisibility(View.VISIBLE);
                 getString_mid_ListView(bible_titleList[mid_index]);
-                mid_Content.setAdapter(sideMidMenuAdapter);
-                listView.setVisibility(View.GONE);
-                innerContent.setVisibility(View.GONE);
+                midListView.setAdapter(sideMidMenuAdapter);
+                outerListView.setVisibility(View.GONE);
+                innerListView.setVisibility(View.GONE);
             } else if (isInnerSheet) {
-                innerContent.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                mid_Content.setVisibility(View.GONE);
+                innerListView.setVisibility(View.VISIBLE);
+                outerListView.setVisibility(View.GONE);
+                midListView.setVisibility(View.GONE);
                 if (reverse_Language(mid_str).equals("Unexpected")) {
                     String tmp = mid_str;
                     mid_str = mid_reverse_str;
                     mid_reverse_str = tmp;
                 }
                 getString_Inner_ListView(mid_reverse_str);
-                innerContent.setAdapter(sideMenuAdapter);
+                innerListView.setAdapter(sideMenuAdapter);
             }
         }
     }
@@ -4133,24 +4004,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
     }
 
-    public void setContentAndconnectHttpAndGetJson(String recv, final int currSide, final String location) {
+    public void setContentAndconnectHttpAndGetJson(String recv, final int currSide, final String location, final int idx) {
         if (recv.contains(" ")) {
             recv = recv.replace(' ', '+');
         }
         final String finalReceive = recv;
 
-        if (currSide == 1) {
-            content.setText("불러오는 중입니다.");
-        } else if (currSide == 2) {
-            side2_left_content.setText("불러오는 중입니다.");
-            side2_right_content.setText("불러오는 중입니다.");
-        } else if (currSide == 3) {
-            side3_left_content.setText("불러오는 중입니다.");
-            side3_center_content.setText("불러오는 중입니다.");
-            side3_right_content.setText("불러오는 중입니다.");
+        if (location.equals("left")) {
+            if (currSide == 1) {
+                side1_Content.setText("불러오는 중입니다.");
+            } else if (currSide == 2) {
+                side2_Content.setText("불러오는 중입니다.");
+            } else if (currSide == 3) {
+                side3_Content.setText("불러오는 중입니다.");
+            }
         }
-
-        new Thread(new Runnable() {
+        Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -4174,7 +4043,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                parseJson(receiveMsgFromJson, currSide, location);
+                                parseJson(receiveMsgFromJson, currSide, location, idx);
                             }
                         });
                         reader.close();
@@ -4190,32 +4059,41 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     e.printStackTrace();
                 }
             }
-        }).start();
-
+        });
+        th.start();
     }
 
-    public void parseJson(String jsonString, int currSide, String location) {
+    public void parseJson(String jsonString, int currSide, String location, int idx) {
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 if (currSide == 1) {
-                    content.setText(jsonObject.optString("text"));
+                    side1_Content.setText(jsonObject.optString("text"));
                 } else if (currSide == 2) {
                     if (location.equals("left")) {
-                        side2_left_content.setText(jsonObject.optString("text"));
+                        side2_Content.setText(jsonObject.optString("text"));
                     } else if (location.equals("right")) {
-                        side2_right_content.setText(jsonObject.optString("text"));
+                        side2_Content.setText(side2_Content.getText().toString() + "\n\n" + jsonObject.optString("text"));
                     }
                 } else if (currSide == 3) {
                     if (location.equals("left")) {
-                        side3_left_content.setText(jsonObject.optString("text"));
+                        side3_Content.setText(jsonObject.optString("text"));
                     } else if (location.equals("center")) {
-                        side3_center_content.setText(jsonObject.optString("text"));
+                        side3_Content.setText(side3_Content.getText().toString() + "\n\n" + jsonObject.optString("text"));
                     } else if (location.equals("right")) {
-                        side3_right_content.setText(jsonObject.optString("text"));
+                        side3_Content.setText(side3_Content.getText().toString() + "\n\n" + jsonObject.optString("text"));
                     }
                 }
+            }
+            if (currSide == 2 && location.equals("left")) {
+                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, idx + 1).getContents(), currSide, "right", idx + 1);
+            }
+            if (currSide == 3 && location.equals("left")) {
+                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, idx + 1).getContents(), currSide, "center", idx + 1);
+            }
+            if (currSide == 3 && location.equals("center")) {
+                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, idx + 1).getContents(), currSide, "right", idx + 1);
             }
         } catch (JSONException e) {
             e.printStackTrace();

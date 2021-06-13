@@ -51,7 +51,7 @@ public class TodayVerseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today_verse);
         korSheet = ((MainActivity) MainActivity.context_main).korean_sheet;
-        engSheet = ((MainActivity) MainActivity.context_main).sheet;
+        engSheet = ((MainActivity) MainActivity.context_main).eng_sheet;
         todayTitle = findViewById(R.id.today_title);
         todayList = findViewById(R.id.today_list);
         languageToggle = findViewById(R.id.language_toggle);

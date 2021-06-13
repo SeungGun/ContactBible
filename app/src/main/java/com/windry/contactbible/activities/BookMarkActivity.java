@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,7 +56,7 @@ public class BookMarkActivity extends AppCompatActivity {
         bmdbHelper = new RealBMDBHelper(this);
         dateDBHelper = new DateDBHelper(this);
 
-        demo_sheet = ((MainActivity) MainActivity.context_main).sheet; // 메인액티비티 클래스의 변수를 가져옴
+        demo_sheet = ((MainActivity) MainActivity.context_main).eng_sheet; // 메인액티비티 클래스의 변수를 가져옴
         korean_demo_sheet = ((MainActivity) MainActivity.context_main).korean_sheet;
         isKorean = ((MainActivity) MainActivity.context_main).isKorean;
 
