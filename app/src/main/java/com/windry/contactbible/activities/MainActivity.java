@@ -96,20 +96,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ScrollView side2_layout; // 2절 단위 화면 layout
     private ScrollView side3_layout; // 3절 단위 화면 layout
 
-    private LinearLayout side1_entire;
-    private LinearLayout side2_entire;
-    private LinearLayout side3_entire;
+    private LinearLayout side1_entire; //1절 단위 터치 화면
+    private LinearLayout side2_entire;// 2절 단위 터치 화면
+    private LinearLayout side3_entire;// 3절 단위 터치 화면
     private LinearLayout bottom_menu; // 하단 메뉴 화면 layout
     private LinearLayout top_menu; // 상단 메뉴 화면 layout
     private LinearLayout bottom_center_menu;
     private LinearLayout bottom_right_menu;
     private LinearLayout above_content_layout;
-    private LinearLayout loadingMenu;
+    private LinearLayout loadingMenu; // drawer 메뉴에서 mid 리스트뷰로 이동 시 보여주는 로딩 화면
 
-    private TextView side1_Content; // 1절 단위 시 내용 보여주는 Text View
-    private TextView title; // 상단바에 보여지는 제목 Text View
-    private TextView side2_Content; // 2절 단위 시 왼쪽 내용
-    private TextView side3_Content; // 3절 단위 시 왼쪽 내용
+    private TextView title; // 상단바에 보여지는 내용 공간
+    private TextView side1_Content; // 1절 단위의 내용 공간
+    private TextView side2_Content; // 2절 단위의 내용 공간
+    private TextView side3_Content; // 3절 단위의 내용 공간
     private EditText memo_content; // 메모 입력하는 공간
 
     private IndexDBHelper dbHelper; //현재 성경위치 대한 인덱스 데이터베이스
@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private boolean isOpen = false; // 메모장 열렸는지 판단
     private boolean isInnerSheet = false; // 사이드메뉴 Inner인지 아닌지 판단
     private boolean isOuterSheet = true; // 사이드메뉴 Outer인지 아닌지 판단 
-    private boolean isMidSheet = false; // 사이드메뉴 Min인지 아닌지 판단
-    public boolean isKorean = true;
-    private boolean isPlayed = false;
+    private boolean isMidSheet = false; // 사이드메뉴 Mid인지 아닌지 판단
+    public boolean isKorean = true; // 현재 한국어인지 판단
+    private boolean isPlayed = false; // 음악이 재생되고 있는지 판단
 
     private ArrayList<Boolean> isAll = new ArrayList<>();
     private SideMenuAdapter sideMenuAdapter;
@@ -159,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private String outer_str; // 성경배열을 받는 임시 변수
     private String mid_str;
     private String mid_reverse_str;
-    public String defaultThemeColor = "#BEDAFA";
-    private final String[] bible_titleList = {"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+    public static final String defaultThemeColor = "#BEDAFA";
+    public static final String[] bible_titleList = {"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
             "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles",
             "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
             "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea",
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians",
             "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews",
             "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"};// 성경 제목 리스트 배열
-    private final String[] korean_bible_titleList = {"창세기", "출애굽기", "레위기", "민수기", "신명기", "여호수아", "사사기", "룻기", "사무엘상", "사무엘하",
+    public static final String[] korean_bible_titleList = {"창세기", "출애굽기", "레위기", "민수기", "신명기", "여호수아", "사사기", "룻기", "사무엘상", "사무엘하",
             "열왕기상", "열왕기하", "역대상", "역대하", "에스라", "느헤미야", "에스더", "욥기", "시편", "잠언", "전도서", "아가", "이사야", "예레미야", "예레미야애가", "에스겔",
             "다니엘", "호세아", "요엘", "아모스", "오바댜", "요나", "미가", "나훔", "하박국", "스바냐", "학개", "스가랴", "말라기",
             "마태복음", "마가복음", "누가복음", "요한복음", "사도행전", "로마서", "고린도전서", "고린도후서", "갈라디아서", "에베소서", "빌립보서", "골로새서", "데살로니가전서", "데살로니가후서",
@@ -1024,7 +1024,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1048,7 +1048,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1299,7 +1299,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (index + 3 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1322,7 +1322,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (index + 3 < MAX_ROW_EXCEL) {
                     if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                        builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                         final AlertDialog alertDialog = builder.create();
                         alertDialog.show();
                         new Handler().postDelayed(new Runnable() {
@@ -1465,7 +1465,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(eng_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(eng_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(eng_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(eng_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
@@ -1490,7 +1490,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         if (index + 3 < MAX_ROW_EXCEL) {
                             if (extractSheetNum(korean_sheet.getCell(0, index).getContents()) + 1 == extractSheetNum(korean_sheet.getCell(0, index + 3).getContents())) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 1).getContents()) + "장 입니다.");
+                                builder.setMessage(extractSheetTitle(korean_sheet.getCell(0, index + 1).getContents()) + " " + extractSheetNum(korean_sheet.getCell(0, index + 2).getContents()) + "장 입니다.");
                                 final AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 new Handler().postDelayed(new Runnable() {
