@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.windry.contactbible.R;
@@ -70,7 +71,12 @@ public class TodayVerseActivity extends AppCompatActivity {
                 finish();
             }
         });
-        getTodayVerseFromJson();
+        try {
+            getTodayVerseFromJson();
+        }catch (Exception e){
+            showToast("비정상 접근 : 문제발생 재접속 바랍니다.");
+            finish();
+        }
         languageToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -297,5 +303,8 @@ public class TodayVerseActivity extends AppCompatActivity {
                 return front + ", " + rear;
             }
         }
+    }
+    public void showToast(String charSequence) {
+        Toast.makeText(this, charSequence, Toast.LENGTH_SHORT).show();
     }
 }

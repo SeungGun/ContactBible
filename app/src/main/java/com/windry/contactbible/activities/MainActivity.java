@@ -1343,8 +1343,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
             }
         }
-
-
         return true;
     }
 
@@ -1590,18 +1588,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             if (cursor.getCount() > 0) {
                                 bmDBHelper.deleteRecord(index + i);
                             }
-                            if (!isKorean) {
-                                String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
-                                        .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
-                                title.setText(splitStr);
-                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
-                            } else {
-                                title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
-                                        korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-                                side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
-                                        + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
-                            }
                         }
+                        if (!isKorean) {
+                            String splitStr = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                    .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
+                            title.setText(splitStr);
+                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
+                        } else {
+                            title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
+                                    korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
+                            side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                    + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
+                        }
+
                     } else if (index == 1) {
                         showToast("제일 첫 구절입니다.");
                         Cursor cursor;
