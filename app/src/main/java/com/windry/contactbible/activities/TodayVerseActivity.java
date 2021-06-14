@@ -275,7 +275,11 @@ public class TodayVerseActivity extends AppCompatActivity {
                 }
             }
             if (flag) {
-                return this.book + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+                if(entire.length == 1){
+                    return this.book + " " + this.chapter + ":" + this.verse;
+                }else {
+                    return this.book + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+                }
             } else {
                 String front = this.book + " " + this.chapter + ":" + this.verse + "~" + entire[tmp - 1].verse;
                 String rear = entire[tmp].book + " " + entire[tmp].chapter + ":" + entire[tmp].verse
@@ -295,7 +299,12 @@ public class TodayVerseActivity extends AppCompatActivity {
                 }
             }
             if (flag) {
-                return this.korBook + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+                if(entire.length == 1){
+                    return this.korBook + " " + this.chapter + ":" + this.verse;
+                }
+                else {
+                    return this.korBook + " " + this.chapter + ":" + this.verse + "~" + entire[entire.length - 1].verse;
+                }
             } else {
                 String front = this.korBook + " " + this.chapter + ":" + this.verse + "~" + entire[tmp - 1].verse;
                 String rear = entire[tmp].korBook + " " + entire[tmp].chapter + ":" + entire[tmp].verse
