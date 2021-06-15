@@ -1,6 +1,7 @@
 package com.windry.contactbible.activities;
 //Copyright by Seunggun sin
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -328,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
         /* -----------------  Seek Bar Setting(절 단위 변경 bar) -------------------*/
-        current_side_num = side_pref.getInt("side_mode", 0); //chk
+        current_side_num = side_pref.getInt("side_mode", 1); //chk
         switch (current_side_num - 1) {
             case 0:
                 memo_OnOff.setVisibility(View.VISIBLE);
@@ -4098,6 +4099,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             e.printStackTrace();
         }
     }
+
 }
 
 
