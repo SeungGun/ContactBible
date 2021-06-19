@@ -1,4 +1,4 @@
-package com.windry.contactbible;
+package com.windry.contactbible.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
+import com.windry.contactbible.R;
 import com.windry.contactbible.database.ReadDBHelper;
 
 import androidx.annotation.Nullable;

@@ -33,5 +33,5 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="9.3"
-        android:name="com.windry.contactbible.SettingFragment"/>
+        android:name="com.windry.contactbible.fragment.SettingFragment"/>
 </LinearLayout>
