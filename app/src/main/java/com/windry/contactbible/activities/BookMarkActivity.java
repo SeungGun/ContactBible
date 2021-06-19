@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.windry.contactbible.adapter.BookMarkAdapter;
 import com.windry.contactbible.database.DateDBHelper;
 import com.windry.contactbible.R;
-import com.windry.contactbible.database.RealBMDBHelper;
+import com.windry.contactbible.database.BookMarkDBHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +36,7 @@ import jxl.Sheet;
 public class BookMarkActivity extends AppCompatActivity {
     private Sheet demo_sheet = null;
     private Sheet korean_demo_sheet = null;
-    private RealBMDBHelper bmdbHelper;
+    private BookMarkDBHelper bmdbHelper;
     private ListView listView;
     private boolean[] opened;
     private BookMarkAdapter bookMarkAdapter;
@@ -53,7 +53,7 @@ public class BookMarkActivity extends AppCompatActivity {
         setContentView(R.layout.bookmark_layout);
 
         listView = findViewById(R.id.bookmark_list);
-        bmdbHelper = new RealBMDBHelper(this);
+        bmdbHelper = new BookMarkDBHelper(this);
         dateDBHelper = new DateDBHelper(this);
 
         demo_sheet = ((MainActivity) MainActivity.context_main).eng_sheet; // 메인액티비티 클래스의 변수를 가져옴

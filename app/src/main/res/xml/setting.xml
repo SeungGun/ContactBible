@@ -59,4 +59,17 @@
         app:allowDividerAbove="true"
         />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="진도율"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        >
+        <PreferenceScreen
+            android:icon="@drawable/ic_baseline_reset_24"
+            app:allowDividerBelow="true"
+            app:allowDividerAbove="true"
+            android:key="ResetProgress"
+            android:title="진도율 초기화"
+            android:summary="지금까지 읽은 구절의 진도율을 초기화 합니다."/>
+    </PreferenceCategory>
 </PreferenceScreen>

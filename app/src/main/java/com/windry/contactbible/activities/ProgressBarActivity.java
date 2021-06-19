@@ -3,13 +3,12 @@ package com.windry.contactbible.activities;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.windry.contactbible.database.BookMarkDBHelper;
+import com.windry.contactbible.database.ReadDBHelper;
 import com.windry.contactbible.R;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,7 @@ public class ProgressBarActivity extends AppCompatActivity {
     private ProgressBar progress_old;
     private ProgressBar progress_new;
 
-    private BookMarkDBHelper bmDBhelper;
+    private ReadDBHelper bmDBhelper;
     private TextView percentage;
     private TextView percentage_old;
     private TextView percentage_new;
@@ -41,7 +40,7 @@ public class ProgressBarActivity extends AppCompatActivity {
                 finish();
             }
         });
-        bmDBhelper = new BookMarkDBHelper(this);
+        bmDBhelper = new ReadDBHelper(this);
         selectDB();
 
         double val = (count / 31102.0) * 100;

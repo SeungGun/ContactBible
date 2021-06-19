@@ -1,7 +1,6 @@
 package com.windry.contactbible.activities;
 //Copyright by Seunggun sin
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,12 +42,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.windry.contactbible.database.BookMarkDBHelper;
+import com.windry.contactbible.database.ReadDBHelper;
 import com.windry.contactbible.database.DateDBHelper;
 import com.windry.contactbible.database.IndexDBHelper;
 import com.windry.contactbible.database.MemoDBHelper;
 import com.windry.contactbible.R;
-import com.windry.contactbible.database.RealBMDBHelper;
+import com.windry.contactbible.database.BookMarkDBHelper;
 import com.windry.contactbible.data.SheetNumList;
 import com.windry.contactbible.adapter.SideMenuAdapter;
 import com.windry.contactbible.adapter.SideMidMenuAdapter;
@@ -115,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private IndexDBHelper dbHelper; //현재 성경위치 대한 인덱스 데이터베이스
     private MemoDBHelper memoDBHelper; // 각 절마다의 적은 메모 데이터베이스
-    private BookMarkDBHelper bmDBHelper; // 읽었는지 확인하는 데이터베이스
-    private RealBMDBHelper realBMDBHelper; // 즐겨찾기한 항목 데이터베이스
+    private ReadDBHelper bmDBHelper; // 읽었는지 확인하는 데이터베이스
+    private BookMarkDBHelper realBMDBHelper; // 즐겨찾기한 항목 데이터베이스
     private DateDBHelper dateDBHelper; // 즐겨찾기한 날짜 데이터베이스
 
     private Button memo_store; // 메모 저장 버튼
@@ -742,8 +741,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public void initializeDatabaseObj() {
         dbHelper = new IndexDBHelper(this); // 현재 성경위치 대한 인덱스 데이터베이스
         memoDBHelper = new MemoDBHelper(this); // 각 절마다의 적은 메모 데이터베이스
-        bmDBHelper = new BookMarkDBHelper(this); // 읽었는지 확인하는 데이터베이스
-        realBMDBHelper = new RealBMDBHelper(this); // 즐겨찾기한 항목 데이터베이스
+        bmDBHelper = new ReadDBHelper(this); // 읽었는지 확인하는 데이터베이스
+        realBMDBHelper = new BookMarkDBHelper(this); // 즐겨찾기한 항목 데이터베이스
         dateDBHelper = new DateDBHelper(this); // 즐겨찾기한 날짜 데이터베이스
     }
 
