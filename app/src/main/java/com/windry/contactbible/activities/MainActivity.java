@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private Button side1Button;
     private Button side2Button;
     private Button side3Button;
+    private Button goTodayVerse;
 
     private static int title_textSize = 14; // 상단바 제목 기본 글자 크기(단위 : pt)
     private static int index = 1; // 현재 성경 index(영어)
@@ -613,6 +614,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 startActivity(intent);
             }
         });
+        /* moving to TodayVerse Page */
+        goTodayVerse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TodayVerseActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /*-------------------------------------------------------- Side Bar Thread */
         thread = new NaviBarThread();
@@ -808,6 +817,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         side1Button = findViewById(R.id.side1_btn);
         side2Button = findViewById(R.id.side2_btn);
         side3Button = findViewById(R.id.side3_btn);
+
+        goTodayVerse = findViewById(R.id.go_todayVerse);
     }
 
     public void switchLanguage() {

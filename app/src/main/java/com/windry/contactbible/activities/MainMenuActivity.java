@@ -15,7 +15,6 @@ public class MainMenuActivity extends AppCompatActivity {
     private Button go_bookmark;
     private Button go_setting;
     private Button go_helper;
-    private Button go_today;
     private MoveThread thread;
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,7 +25,6 @@ public class MainMenuActivity extends AppCompatActivity {
         go_progress = findViewById(R.id.progress_check);
         go_setting = findViewById(R.id.setting);
         go_helper = findViewById(R.id.app_helper);
-        go_today = findViewById(R.id.today_verse);
         thread = new MoveThread();
         thread.start();
     }
@@ -66,13 +64,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     intent = new Intent(view.getContext(), AppHelperActivity.class);
-                    startActivity(intent);
-                }
-            });
-            go_today.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    intent = new Intent(view.getContext(), TodayVerseActivity.class);
                     startActivity(intent);
                 }
             });

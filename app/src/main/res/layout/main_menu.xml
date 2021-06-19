@@ -39,16 +39,6 @@
                     android:text="@string/read_continue"
                     android:textSize="13pt"
                     android:textColor="#384B60"/>
-                <Button
-                    android:id="@+id/today_verse"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="#BEDAFA"
-                    android:onClick="goToday"
-                    android:text="@string/today_verse"
-                    android:textSize="13pt"
-                    android:textColor="#384B60"/>
 
                 <Button
                     android:id="@+id/progress_check"
