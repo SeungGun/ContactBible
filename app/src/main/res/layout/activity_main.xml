@@ -72,15 +72,39 @@
                 android:textStyle="bold"
                 android:text="절 단위 바꾸기 ▶"
                 />
-            <SeekBar
-                android:id="@+id/side_mode"
-                android:layout_width="wrap_content"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:max="2"
-                android:layout_gravity="center_vertical"
-                android:progressDrawable="@drawable/seekbar_background"
-                android:thumb="@drawable/seekbar_thumb"/>
+            <Button
+                android:id="@+id/side1_btn"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="1절"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="4dp"
+                />
+            <Button
+                android:id="@+id/side2_btn"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="2절"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="4dp"
+                />
+            <Button
+                android:id="@+id/side3_btn"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="3절"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="4dp"
+                />
         </LinearLayout>
 
             <ScrollView

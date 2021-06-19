@@ -124,12 +124,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ImageButton outer_btn; // 사이드바에서 inner list view일 때 outer로 이동하는 버튼
     private ImageButton bookmarking; // 북마크 설정/해제 버튼
     private Button memo_OnOff; // 메모장 공간 on/off 버튼
-    private SeekBar side_mode; // 절 단위 변경하는 seek bar
     private SeekBar textSize_control;
     private Button quit_memo_btn; // 메모장 열렸을 시 메모장 공간에서 메모장 끄는 버튼
     private ImageButton play_music;
     private Button control_volume;
     private Switch language_switch;
+    private Button side1Button;
+    private Button side2Button;
+    private Button side3Button;
 
     private static int title_textSize = 14; // 상단바 제목 기본 글자 크기(단위 : pt)
     private static int index = 1; // 현재 성경 index(영어)
@@ -161,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private String mid_str;
     private String mid_reverse_str;
     public static final String defaultThemeColor = "#BEDAFA";
+    public static final String strongThemeColor = "#5E92C4";
     public static final String[] bible_titleList = {"Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
             "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles",
             "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
@@ -330,8 +333,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
         /* -----------------  Seek Bar Setting(절 단위 변경 bar) -------------------*/
         current_side_num = side_pref.getInt("side_mode", 1); //chk
-        switch (current_side_num - 1) {
-            case 0:
+        switch (current_side_num) {
+            case 1:
                 memo_OnOff.setVisibility(View.VISIBLE);
                 bookmarking.setVisibility(View.VISIBLE);
                 side1_layout.setVisibility(View.VISIBLE);
@@ -350,8 +353,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 getInitialBookmark();
 
+                side1Button.setBackgroundColor(Color.parseColor(strongThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
                 break;
-            case 1:
+            case 2:
                 if (!isKorean) {
                     memo_OnOff.setVisibility(View.INVISIBLE);
                     bookmarking.setVisibility(View.INVISIBLE);
@@ -381,8 +387,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
                     side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
                 }
+                side1Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(strongThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
                 break;
-            case 2:
+            case 3:
                 if (!isKorean) {
                     memo_OnOff.setVisibility(View.INVISIBLE);
                     bookmarking.setVisibility(View.INVISIBLE);
@@ -415,156 +424,162 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
                 }
+                side1Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(strongThemeColor));
                 break;
         }
         /*----------------------------------------------------------------------------------------------*/
-        side_mode.setProgress(current_side_num - 1);// chk
-        side_mode.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
+        side1Button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                switch (seekBar.getProgress()) {
-                    case 0:
-                        memo_OnOff.setVisibility(View.VISIBLE);
-                        bookmarking.setVisibility(View.VISIBLE);
-                        side1_layout.setVisibility(View.VISIBLE);
-                        side2_layout.setVisibility(View.GONE);
+            public void onClick(View view) {
+                memo_OnOff.setVisibility(View.VISIBLE);
+                bookmarking.setVisibility(View.VISIBLE);
+                side1_layout.setVisibility(View.VISIBLE);
+                side2_layout.setVisibility(View.GONE);
+                side3_layout.setVisibility(View.GONE);
+
+                if (!isKorean) {
+                    setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
+                    title.setText(eng_sheet.getCell(0, index).getContents());
+                } else {
+                    side1_Content.setText(korean_sheet.getCell(1, index).getContents());
+                    title.setText(korean_sheet.getCell(0, index).getContents());
+                }
+                title_textSize = 14;
+                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
+                textSize_control.setProgress(17, true);
+                side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
+                current_side_num = 1;
+                editor.putInt("side_mode", current_side_num);
+                editor.apply();
+                side1Button.setBackgroundColor(Color.parseColor(strongThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                getInitialBookmark();
+            }
+        });
+
+        side2Button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                if (!isKorean) {
+                    if (index + 1 <= MAX_ROW_EXCEL) {
+                        memo_OnOff.setVisibility(View.INVISIBLE);
+                        bookmarking.setVisibility(View.INVISIBLE);
+                        side1_layout.setVisibility(View.GONE);
+                        side2_layout.setVisibility(View.VISIBLE);
                         side3_layout.setVisibility(View.GONE);
-
-                        if (!isKorean) {
-                            setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 1, "left", index);
-                            title.setText(eng_sheet.getCell(0, index).getContents());
-                        } else {
-                            side1_Content.setText(korean_sheet.getCell(1, index).getContents());
-                            title.setText(korean_sheet.getCell(0, index).getContents());
-                        }
-                        title_textSize = 14;
+                        textSize_control.setProgress(15, true);
+                        title_textSize = 13;
                         title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                        textSize_control.setProgress(17, true);
-                        side1_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
-                        current_side_num = 1;
+                        String splitStr1 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1).getContents());
+                        title.setText(splitStr1);
+
+                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
+                        side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
+                        current_side_num = 2;
+                        editor.putInt("side_mode", current_side_num);
+                        editor.apply();
+                    } else {
+                        showToast("마지막 절입니다!");
+                    }
+                } else {
+                    if (index + 1 <= MAX_ROW_EXCEL) {
+                        memo_OnOff.setVisibility(View.INVISIBLE);
+                        bookmarking.setVisibility(View.INVISIBLE);
+                        side1_layout.setVisibility(View.GONE);
+                        side2_layout.setVisibility(View.VISIBLE);
+                        side3_layout.setVisibility(View.GONE);
+                        textSize_control.setProgress(15, true);
+                        title_textSize = 13;
+
+                        title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
+                        title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
+
+                        side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
+                        side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+
+                        current_side_num = 2;
+
+                        editor.putInt("side_mode", current_side_num);
+                        editor.apply();
+                    } else {
+                        showToast("마지막 절입니다!");
+                    }
+                }
+                side1Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(strongThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+            }
+        });
+
+        side3Button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                if (!isKorean) {
+                    if (index + 2 <= MAX_ROW_EXCEL) {
+                        memo_OnOff.setVisibility(View.INVISIBLE);
+                        bookmarking.setVisibility(View.INVISIBLE);
+                        side1_layout.setVisibility(View.GONE);
+                        side2_layout.setVisibility(View.GONE);
+                        side3_layout.setVisibility(View.VISIBLE);
+                        textSize_control.setProgress(13, true);
+
+                        current_side_num = 3;
                         editor.putInt("side_mode", current_side_num);
                         editor.apply();
 
-                        getInitialBookmark();
-                        break;
-                    case 1:
-                        if (!isKorean) {
-                            if (index + 1 <= MAX_ROW_EXCEL) {
-                                memo_OnOff.setVisibility(View.INVISIBLE);
-                                bookmarking.setVisibility(View.INVISIBLE);
-                                side1_layout.setVisibility(View.GONE);
-                                side2_layout.setVisibility(View.VISIBLE);
-                                side3_layout.setVisibility(View.GONE);
-                                textSize_control.setProgress(15, true);
-                                title_textSize = 13;
-                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
+                        title_textSize = 11;
+                        title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
+                        String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
+                                .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
+                        title.setText(splitStr2);
 
-                                String splitStr1 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1).getContents());
-                                title.setText(splitStr1);
+                        setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
 
-                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 2, "left", index);
-                                side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+                    } else {
+                        showToast("마지막 절입니다!");
+                    }
+                } else {
+                    if (index + 2 <= MAX_ROW_EXCEL) {
+                        memo_OnOff.setVisibility(View.INVISIBLE);
+                        bookmarking.setVisibility(View.INVISIBLE);
+                        side1_layout.setVisibility(View.GONE);
+                        side2_layout.setVisibility(View.GONE);
+                        side3_layout.setVisibility(View.VISIBLE);
+                        textSize_control.setProgress(13, true);
 
-                                current_side_num = 2;
-                                editor.putInt("side_mode", current_side_num);
-                                editor.apply();
-                            } else {
-                                showToast("마지막 절입니다!");
-                                seekBar.setProgress(0, true);
-                            }
-                        } else {
-                            if (index + 1 <= MAX_ROW_EXCEL) {
-                                memo_OnOff.setVisibility(View.INVISIBLE);
-                                bookmarking.setVisibility(View.INVISIBLE);
-                                side1_layout.setVisibility(View.GONE);
-                                side2_layout.setVisibility(View.VISIBLE);
-                                side3_layout.setVisibility(View.GONE);
-                                textSize_control.setProgress(15, true);
-                                title_textSize = 13;
+                        title_textSize = 11;
 
-                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                                title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1]);
+                        title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
+                        title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
+                                korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
 
-                                side2_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents());
-                                side2_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
+                        side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
+                                + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
+                        side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
 
-                                current_side_num = 2;
-
-                                editor.putInt("side_mode", current_side_num);
-                                editor.apply();
-                            } else {
-                                showToast("마지막 절입니다!");
-                                seekBar.setProgress(0, true);
-                            }
-                        }
-                        break;
-                    case 2:
-                        if (!isKorean) {
-                            if (index + 2 <= MAX_ROW_EXCEL) {
-                                memo_OnOff.setVisibility(View.INVISIBLE);
-                                bookmarking.setVisibility(View.INVISIBLE);
-                                side1_layout.setVisibility(View.GONE);
-                                side2_layout.setVisibility(View.GONE);
-                                side3_layout.setVisibility(View.VISIBLE);
-                                textSize_control.setProgress(13, true);
-
-                                current_side_num = 3;
-                                editor.putInt("side_mode", current_side_num);
-                                editor.apply();
-
-                                title_textSize = 11;
-                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                                String splitStr2 = eng_sheet.getCell(0, index).getContents() + "," + splitTitle(eng_sheet.getCell(0, index + 1)
-                                        .getContents()) + "," + splitTitle(eng_sheet.getCell(0, index + 2).getContents());
-                                title.setText(splitStr2);
-
-                                setContentAndconnectHttpAndGetJson(eng_sheet.getCell(0, index).getContents(), 3, "left", index);
-
-                            } else {
-                                showToast("마지막 절입니다!");
-                                seekBar.setProgress(0, true);
-                            }
-                        } else {
-                            if (index + 2 <= MAX_ROW_EXCEL) {
-                                memo_OnOff.setVisibility(View.INVISIBLE);
-                                bookmarking.setVisibility(View.INVISIBLE);
-                                side1_layout.setVisibility(View.GONE);
-                                side2_layout.setVisibility(View.GONE);
-                                side3_layout.setVisibility(View.VISIBLE);
-                                textSize_control.setProgress(13, true);
-
-                                title_textSize = 11;
-
-                                title.setTextSize(TypedValue.COMPLEX_UNIT_PT, title_textSize);
-                                title.setText(korean_sheet.getCell(0, index).getContents() + "," + korean_sheet.getCell(0, index + 1).getContents().split(" ")[1] + "," +
-                                        korean_sheet.getCell(0, index + 2).getContents().split(" ")[1]);
-
-                                side3_Content.setText(korean_sheet.getCell(1, index).getContents() + "\n\n" + korean_sheet.getCell(1, index + 1).getContents()
-                                        + "\n\n" + korean_sheet.getCell(1, index + 2).getContents());
-                                side3_Content.setTextSize(TypedValue.COMPLEX_UNIT_PT, textSize_control.getProgress());
-
-                                current_side_num = 3;
-                                editor.putInt("side_mode", current_side_num);
-                                editor.apply();
-                            } else {
-                                showToast("마지막 절입니다!");
-                                seekBar.setProgress(0, true);
-                            }
-                        }
-                        break;
+                        current_side_num = 3;
+                        editor.putInt("side_mode", current_side_num);
+                        editor.apply();
+                    } else {
+                        showToast("마지막 절입니다!");
+                    }
                 }
+                side1Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side2Button.setBackgroundColor(Color.parseColor(defaultThemeColor));
+                side3Button.setBackgroundColor(Color.parseColor(strongThemeColor));
             }
         });
+
         /*-----------------------------------------------------------------------------------*/
         side1_entire.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -785,11 +800,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         above_content_layout = findViewById(R.id.above_content_layout);
         loadingMenu = findViewById(R.id.loading_scr_inMenu);
 
-        side_mode = findViewById(R.id.side_mode);
         textSize_control = findViewById(R.id.seekbar_textsize);
 
         play_music = findViewById(R.id.play_music);
         control_volume = findViewById(R.id.control_volume);
+
+        side1Button = findViewById(R.id.side1_btn);
+        side2Button = findViewById(R.id.side2_btn);
+        side3Button = findViewById(R.id.side3_btn);
     }
 
     public void switchLanguage() {
