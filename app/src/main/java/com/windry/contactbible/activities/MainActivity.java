@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private LinearLayout bottom_right_menu;
     private LinearLayout above_content_layout;
     private LinearLayout loadingMenu; // drawer 메뉴에서 mid 리스트뷰로 이동 시 보여주는 로딩 화면
+    private LinearLayout backgroundGoMain;
 
     private TextView title; // 상단바에 보여지는 내용 공간
     private TextView side1_Content; // 1절 단위의 내용 공간
@@ -766,6 +767,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         bottom_right_menu = findViewById(R.id.bottom_right_menu);
         memo_OnOff = findViewById(R.id.btn1); // turn on/off the "MEMO space" through button
         quit_memo_btn = findViewById(R.id.quit_memo);
+        backgroundGoMain = findViewById(R.id.background_go_main);
 
         outerListView = findViewById(R.id.list_excel);
 
@@ -892,7 +894,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             GradientDrawable bottom_right = (GradientDrawable) bottom_right_menu.getBackground();
             bottom_right.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
 
-            GradientDrawable bottom_left = (GradientDrawable) goto_main.getBackground();
+            GradientDrawable bottom_left = (GradientDrawable) backgroundGoMain.getBackground();
             bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
         }
         if (pref.getInt("letterSpace", 0) != 0) {
@@ -1636,7 +1638,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     GradientDrawable bottom_right = (GradientDrawable) bottom_right_menu.getBackground();
                     bottom_right.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
 
-                    GradientDrawable bottom_left = (GradientDrawable) goto_main.getBackground();
+                    GradientDrawable bottom_left = (GradientDrawable) backgroundGoMain.getBackground();
                     bottom_left.setColor(Color.parseColor(pref.getString("ThemeColor", defaultThemeColor)));
                     break;
                 case "letterSpace": {
