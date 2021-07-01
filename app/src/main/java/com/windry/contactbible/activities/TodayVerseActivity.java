@@ -5,6 +5,7 @@ import jxl.Sheet;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -127,6 +128,32 @@ public class TodayVerseActivity extends AppCompatActivity {
                 ClipData clipData = ClipData.newPlainText("label",str);
                 clipboardManager.setPrimaryClip(clipData);
                 showToast("오늘의 구절을 복사했습니다.");
+            }
+        });
+
+        shareTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                if(todayTitle.getText().toString().equals("") || todayTitle.getText() == null){
+                    showToast("아직 값을 받아오지 못했습니다. 잠시 후 시도해주세요.");
+                    return;
+                }
+                if(todayList == null || todayList.getAdapter() == null || todayList.getCount() == 0){
+                    showToast("아직 값을 받아오지 못했습니다. 잠시 후 시도해주세요.");
+                    return;
+                }
+                StringBuilder str = new StringBuilder("");
+                str.append(todayTitle.getText().toString()).append("\n\n");
+                for(int i=0; i<todayList.getAdapter().getCount(); ++i){
+                    str.append(todayList.getAdapter().getItem(i));
+                    if(i != todayList.getAdapter().getCount() - 1)
+                        str.append("\n\n");
+                }
+                shareIntent.putExtra(Intent.EXTRA_TEXT,str.toString());
+                Intent sharing = Intent.createChooser(shareIntent,"공유하기");
+                startActivity(sharing);
             }
         });
     }
