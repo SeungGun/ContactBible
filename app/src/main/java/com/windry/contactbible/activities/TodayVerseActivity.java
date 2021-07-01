@@ -110,7 +110,7 @@ public class TodayVerseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-                if(todayTitle.getText().toString().equals("") || todayTitle.getText() == null){
+                if(todayTitle.getText() == null || todayTitle.getText().toString().equals("")){
                     showToast("아직 값을 받아오지 못했습니다. 잠시 후 시도해주세요.");
                     return;
                 }
@@ -274,8 +274,6 @@ public class TodayVerseActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("a"+index,"ff");
-
     }
     public void parseJson(String jsonString) {
         try {

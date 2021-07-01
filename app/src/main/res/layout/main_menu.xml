@@ -102,7 +102,7 @@
                     android:layout_width="0px"
                     android:layout_weight="1.5"
                     android:layout_height="wrap_content"
-                    android:text="v 1.1.6"
+                    android:text="v 1.1.7"
                     android:textColor="#BBBBBB"/>
         </LinearLayout>
 

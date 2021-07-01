@@ -60,6 +60,6 @@ public class AppHelperActivity extends AppCompatActivity {
                 "(영)New English Translation(NET)\n" +
                 "(한)개역한글\n\n" +
                 "※문의 사항: ssg2864@gmail.com\n\n" +
-                "※App Version : 1.1.6");
+                "※App Version : 1.1.7");
     }
 }
