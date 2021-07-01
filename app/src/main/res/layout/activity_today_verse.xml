@@ -24,14 +24,31 @@
         <TextView
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:layout_weight="7.6"
-            android:gravity="center"
+            android:layout_weight="6"
+            android:gravity="right|center_vertical"
             android:paddingRight="30dp"
             android:text="오늘의 구절"
             android:textColor="#000000"
             android:textSize="13pt"
             android:textStyle="bold" />
-
+        <ImageButton
+            android:id="@+id/copy_txt_btn"
+            android:layout_gravity="center"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:background="@drawable/ic_baseline_file_copy_24"
+            android:layout_marginRight="5dp"
+            />
+        <ImageButton
+            android:id="@+id/share_btn"
+            android:layout_gravity="center"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:background="@drawable/ic_baseline_share_24"
+            android:layout_marginRight="5dp"
+            />
         <ToggleButton
             android:id="@+id/language_toggle"
             android:layout_width="0px"

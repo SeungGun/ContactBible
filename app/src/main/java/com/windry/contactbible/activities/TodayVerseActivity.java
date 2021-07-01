@@ -3,6 +3,8 @@ package com.windry.contactbible.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import jxl.Sheet;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +48,8 @@ public class TodayVerseActivity extends AppCompatActivity {
     private ImageButton back_btn;
     private SharedPreferences languagePref;
     private SharedPreferences.Editor editor;
+    private ImageButton copyTextButton;
+    private ImageButton shareTextButton;
     private boolean isKorean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,9 @@ public class TodayVerseActivity extends AppCompatActivity {
         loadingScr = findViewById(R.id.loading_scr);
         mainScr = findViewById(R.id.today_scr);
         back_btn = findViewById(R.id.back_menu);
+        copyTextButton = findViewById(R.id.copy_txt_btn);
+        shareTextButton = findViewById(R.id.share_btn);
+
         languagePref = getSharedPreferences("side", MODE_PRIVATE);
         editor = languagePref.edit();
 
@@ -95,6 +102,31 @@ public class TodayVerseActivity extends AppCompatActivity {
                     editor.apply();
                 }
                 todayList.setAdapter(adapter);
+            }
+        });
+
+        copyTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                if(todayTitle.getText().toString().equals("") || todayTitle.getText() == null){
+                    showToast("아직 값을 받아오지 못했습니다. 잠시 후 시도해주세요.");
+                    return;
+                }
+                if(todayList == null || todayList.getAdapter() == null || todayList.getCount() == 0){
+                    showToast("아직 값을 받아오지 못했습니다. 잠시 후 시도해주세요.");
+                    return;
+                }
+                StringBuilder str = new StringBuilder("");
+                str.append(todayTitle.getText().toString()).append("\n\n");
+                for(int i=0; i<todayList.getAdapter().getCount(); ++i){
+                    str.append(todayList.getAdapter().getItem(i));
+                    if(i != todayList.getAdapter().getCount() - 1)
+                        str.append("\n\n");
+                }
+                ClipData clipData = ClipData.newPlainText("label",str);
+                clipboardManager.setPrimaryClip(clipData);
+                showToast("오늘의 구절을 복사했습니다.");
             }
         });
     }
